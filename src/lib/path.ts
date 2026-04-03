@@ -6,7 +6,7 @@
  *
  * 예: base = '' (루트 배포), base = '/kmucs-alumni' (서브디렉토리 배포)
  */
-export const BASE = '/KMUCS-Alumni';
+export const BASE = '';
 
 /** 내부 페이지 경로에 base prefix 추가 */
 export function url(path: string): string {

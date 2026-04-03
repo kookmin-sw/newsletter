@@ -8,8 +8,8 @@ const isDev = process.argv.includes('dev');
 
 // base path는 src/lib/path.ts의 BASE와 동기화할 것
 export default defineConfig({
-  site: 'https://ymw0407.github.io',
-  base: '/KMUCS-Alumni/',
+  site: 'https://alumni.cs.kookmin.ac.kr',
+  base: '/',
   output: 'static',
   integrations: [
     react(),
