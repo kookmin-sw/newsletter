@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ymw0407.github.io/KMUCS-Alumni/sitemap-index.xml
+Sitemap: https://alumni.cs.kookmin.ac.kr/sitemap-index.xml
