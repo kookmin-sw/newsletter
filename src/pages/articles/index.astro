@@ -10,7 +10,18 @@ const sortedArticles = allArticles.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 );
 
-const allTags = [...new Set(sortedArticles.flatMap((a) => a.data.tags))].sort();
+// 태그를 사용 빈도순(많이 쓰인 순 → 같은 빈도면 가나다순)으로 정렬
+const tagCounts = new Map<string, number>();
+for (const a of sortedArticles) {
+  for (const t of a.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+}
+const sortedTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ko'))
+  .map(([tag]) => tag);
+
+// 기본 노출 개수 — 나머지는 "더보기"로 펼침
+const VISIBLE_TAGS = 10;
+const overflowCount = Math.max(0, sortedTags.length - VISIBLE_TAGS);
 ---
 
 <BaseLayout title="소식" currentPath="/articles">
@@ -23,12 +34,20 @@ const allTags = [...new Set(sortedArticles.flatMap((a) => a.data.tags))].sort();
         description="동문회의 소식, 인터뷰, 행사 이야기를 모아봅니다."
       />
 
-      {allTags.length > 0 && (
-        <div class="tag-filter">
+      {sortedTags.length > 0 && (
+        <div class="tag-filter" data-collapsed="true">
           <a href={url('/articles')} class="tag-btn tag-btn--active">전체</a>
-          {allTags.map((tag) => (
-            <a href={url(`/articles/tags/${tag}`)} class="tag-btn">#{tag}</a>
+          {sortedTags.map((tag, i) => (
+            <a
+              href={url(`/articles/tags/${tag}`)}
+              class={`tag-btn${i >= VISIBLE_TAGS ? ' tag-btn--overflow' : ''}`}
+            >#{tag}</a>
           ))}
+          {overflowCount > 0 && (
+            <button type="button" class="tag-more" aria-expanded="false" data-count={overflowCount}>
+              +{overflowCount}개 더보기
+            </button>
+          )}
         </div>
       )}
 
@@ -81,6 +100,30 @@ const allTags = [...new Set(sortedArticles.flatMap((a) => a.data.tags))].sort();
     background-color: #1A5BC4;
     color: white;
   }
+  /* 초과 태그는 기본 숨김, 펼치면 표시 */
+  .tag-btn--overflow {
+    display: none;
+  }
+  .tag-filter[data-collapsed="false"] .tag-btn--overflow {
+    display: inline-flex;
+  }
+  .tag-more {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border: 1px dashed #CED4DA;
+    border-radius: 9999px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: transparent;
+    color: #1A5BC4;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .tag-more:hover {
+    background-color: #F1F3F5;
+  }
   .article-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -98,3 +141,24 @@ const allTags = [...new Set(sortedArticles.flatMap((a) => a.data.tags))].sort();
     padding: 4rem 0;
   }
 </style>
+
+<script>
+  // 태그 "더보기" 토글 — 초과 태그 펼치기/접기
+  function initTagFilterToggle() {
+    const filter = document.querySelector<HTMLElement>('.tag-filter');
+    if (!filter) return;
+    const btn = filter.querySelector<HTMLButtonElement>('.tag-more');
+    if (!btn || btn.dataset.bound === '1') return;
+    btn.dataset.bound = '1';
+
+    btn.addEventListener('click', () => {
+      const collapsed = filter.getAttribute('data-collapsed') !== 'false';
+      filter.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', String(collapsed));
+      btn.textContent = collapsed ? '접기' : `+${btn.dataset.count}개 더보기`;
+    });
+  }
+
+  document.addEventListener('astro:page-load', initTagFilterToggle);
+  initTagFilterToggle();
+</script>
