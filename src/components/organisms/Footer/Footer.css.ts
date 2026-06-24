@@ -7,7 +7,7 @@ import { colors } from '@/styles/tokens/colors.css';
 export const footer = style({
   backgroundColor: colors.neutral[900],
   color: colors.neutral[400],
-  paddingBlock: space[12],
+  paddingBlock: space[8],
 });
 
 export const footerInner = style({
@@ -27,10 +27,11 @@ export const footerInner = style({
 export const footerGrid = style({
   display: 'grid',
   gridTemplateColumns: '1fr',
-  gap: space[8],
+  gap: space[6],
   '@media': {
     '(min-width: 768px)': {
-      gridTemplateColumns: '2fr 1fr 1fr',
+      gridTemplateColumns: '1fr auto',
+      alignItems: 'start',
     },
   },
 });
@@ -85,7 +86,7 @@ export const footerLink = style({
 });
 
 export const footerBottom = style({
-  marginTop: space[10],
+  marginTop: space[6],
   paddingTop: space[6],
   borderTop: `1px solid ${colors.neutral[800]}`,
   fontSize: fontSize.sm,

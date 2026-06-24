@@ -1,4 +1,4 @@
-import { url, asset } from '@/lib/path';
+import { asset } from '@/lib/path';
 import {
   footer,
   footerInner,
@@ -36,16 +36,6 @@ export function Footer({ externalLinks = [] }: FooterProps) {
               국민대학교 소프트웨어융합대학 졸업 동문들의 네트워크.
               함께 성장하고, 다시 만나며, 미래를 그립니다.
             </p>
-          </div>
-
-          <div>
-            <div className={footerLinkTitle}>바로가기</div>
-            <div className={footerLinkGroup}>
-              <a href={url('/articles')} className={footerLink}>소식</a>
-              <a href={url('/about')} className={footerLink}>소개</a>
-              <a href={url('/programs')} className={footerLink}>프로그램</a>
-              <a href={url('/contact')} className={footerLink}>문의</a>
-            </div>
           </div>
 
           <div>
