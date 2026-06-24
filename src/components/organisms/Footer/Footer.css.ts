@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
 import { space } from '@/styles/tokens/spacing.css';
 import { fontSize, fontWeight } from '@/styles/tokens/typography.css';
 import { colors } from '@/styles/tokens/colors.css';
@@ -11,27 +10,13 @@ export const footer = style({
 });
 
 export const footerInner = style({
-  maxWidth: '1200px',
+  maxWidth: '720px',
   marginInline: 'auto',
   paddingInline: space[4],
+  textAlign: 'center',
   '@media': {
     '(min-width: 768px)': {
       paddingInline: space[6],
-    },
-    '(min-width: 1024px)': {
-      paddingInline: space[8],
-    },
-  },
-});
-
-export const footerGrid = style({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: space[6],
-  '@media': {
-    '(min-width: 768px)': {
-      gridTemplateColumns: '1fr auto',
-      alignItems: 'start',
     },
   },
 });
@@ -39,12 +24,13 @@ export const footerGrid = style({
 export const footerLogoSection = style({
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'center',
   gap: space[3],
   marginBottom: space[3],
 });
 
 export const footerLogo = style({
-  height: '2.5rem',
+  height: '2.25rem',
   width: 'auto',
 });
 
@@ -57,22 +43,18 @@ export const footerTitle = style({
 export const footerDescription = style({
   fontSize: fontSize.sm,
   lineHeight: '1.6',
-  maxWidth: '360px',
+  maxWidth: '460px',
+  marginInline: 'auto',
 });
 
-export const footerLinkGroup = style({
+export const footerLinks = style({
   display: 'flex',
-  flexDirection: 'column',
-  gap: space[2],
-});
-
-export const footerLinkTitle = style({
-  fontSize: fontSize.sm,
-  fontWeight: fontWeight.semibold,
-  color: colors.neutral[200],
-  marginBottom: space[2],
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  justifyContent: 'center',
+  columnGap: space[5],
+  rowGap: space[2],
+  marginTop: space[5],
 });
 
 export const footerLink = style({
@@ -87,16 +69,18 @@ export const footerLink = style({
 
 export const footerBottom = style({
   marginTop: space[6],
-  paddingTop: space[6],
+  paddingTop: space[5],
   borderTop: `1px solid ${colors.neutral[800]}`,
   fontSize: fontSize.sm,
   display: 'flex',
   flexDirection: 'column',
-  gap: space[2],
+  alignItems: 'center',
+  gap: space[1],
   '@media': {
     '(min-width: 768px)': {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
+      gap: space[4],
     },
   },
 });
