@@ -10,13 +10,27 @@ export const footer = style({
 });
 
 export const footerInner = style({
-  maxWidth: '720px',
+  maxWidth: '1200px',
   marginInline: 'auto',
   paddingInline: space[4],
-  textAlign: 'center',
   '@media': {
     '(min-width: 768px)': {
       paddingInline: space[6],
+    },
+    '(min-width: 1024px)': {
+      paddingInline: space[8],
+    },
+  },
+});
+
+export const footerGrid = style({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gap: space[8],
+  '@media': {
+    '(min-width: 640px)': {
+      gridTemplateColumns: '1.6fr 1fr 1fr',
+      gap: space[10],
     },
   },
 });
@@ -24,7 +38,6 @@ export const footerInner = style({
 export const footerLogoSection = style({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
   gap: space[3],
   marginBottom: space[3],
 });
@@ -43,18 +56,22 @@ export const footerTitle = style({
 export const footerDescription = style({
   fontSize: fontSize.sm,
   lineHeight: '1.6',
-  maxWidth: '460px',
-  marginInline: 'auto',
+  maxWidth: '340px',
 });
 
-export const footerLinks = style({
+export const footerColTitle = style({
+  fontSize: fontSize.sm,
+  fontWeight: fontWeight.semibold,
+  color: colors.neutral[200],
+  marginBottom: space[3],
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
+});
+
+export const footerLinkGroup = style({
   display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  justifyContent: 'center',
-  columnGap: space[5],
-  rowGap: space[2],
-  marginTop: space[5],
+  flexDirection: 'column',
+  gap: space[2],
 });
 
 export const footerLink = style({
@@ -67,20 +84,14 @@ export const footerLink = style({
   },
 });
 
+export const footerText = style({
+  fontSize: fontSize.sm,
+  color: colors.neutral[400],
+});
+
 export const footerBottom = style({
-  marginTop: space[6],
-  paddingTop: space[5],
+  marginTop: space[8],
+  paddingTop: space[6],
   borderTop: `1px solid ${colors.neutral[800]}`,
   fontSize: fontSize.sm,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: space[1],
-  '@media': {
-    '(min-width: 768px)': {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      gap: space[4],
-    },
-  },
 });
