@@ -42,6 +42,7 @@ const news = defineCollection({
     draft: z.boolean().default(false),
     source: z.string().optional(),
     sourceUrl: z.string().url().optional(),
+    format: z.enum(['html']).optional(),
   }),
 });
 

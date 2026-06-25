@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 import { url } from '@/lib/path';
 
 export async function getStaticPaths() {
@@ -14,27 +15,36 @@ export async function getStaticPaths() {
 const { item } = Astro.props;
 const { Content } = await render(item);
 const isNewsletter = item.data.tags.includes('뉴스레터');
+const isHtmlNewsletter = item.data.format === 'html';
 ---
 
-<ArticleLayout
-  title={item.data.title}
-  subtitle={item.data.subtitle}
-  publishedAt={item.data.publishedAt}
-  updatedAt={item.data.updatedAt}
-  author={item.data.author}
-  authorRole={item.data.authorRole}
-  coverImage={isNewsletter ? undefined : item.data.coverImage}
-  tags={item.data.tags}
-  tagBasePath={url('/news/tags')}
->
-  {isNewsletter ? (
-    <div class="newsletter-content">
+{isHtmlNewsletter ? (
+  <BaseLayout title={item.data.title} currentPath="/news">
+    <div class="html-newsletter">
       <Content />
     </div>
-  ) : (
-    <Content />
-  )}
-</ArticleLayout>
+  </BaseLayout>
+) : (
+  <ArticleLayout
+    title={item.data.title}
+    subtitle={item.data.subtitle}
+    publishedAt={item.data.publishedAt}
+    updatedAt={item.data.updatedAt}
+    author={item.data.author}
+    authorRole={item.data.authorRole}
+    coverImage={isNewsletter ? undefined : item.data.coverImage}
+    tags={item.data.tags}
+    tagBasePath={url('/news/tags')}
+  >
+    {isNewsletter ? (
+      <div class="newsletter-content">
+        <Content />
+      </div>
+    ) : (
+      <Content />
+    )}
+  </ArticleLayout>
+)}
 
 <style is:global>
   .newsletter-content {
@@ -56,5 +66,29 @@ const isNewsletter = item.data.tags.includes('뉴스레터');
   .newsletter-content a {
     display: block;
     line-height: 0;
+  }
+  /* HTML 뉴스레터: 카드처럼 가운데 컨테이너로 (페이지 전체가 검정 되는 것 방지) */
+  .html-newsletter {
+    max-width: 860px;
+    margin: 1.5rem auto;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  @media (max-width: 600px) {
+    .html-newsletter {
+      margin: 0;
+      border-radius: 0;
+    }
+    .html-newsletter img[height="380"] {
+      height: auto !important;
+    }
+    .html-newsletter img[height="30"] {
+      height: 24px !important;
+    }
+  }
+  @media (max-width: 400px) {
+    .html-newsletter img[height="30"] {
+      height: 20px !important;
+    }
   }
 </style>
