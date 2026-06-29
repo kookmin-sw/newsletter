@@ -217,6 +217,7 @@ export function NewsletterBuilder({ articles = [], initialSections = [] }: Newsl
 
   const previewRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const roRef = useRef<ResizeObserver | null>(null);
   const [previewScale, setPreviewScale] = useState(1);
   const [emailH, setEmailH] = useState(900);
 
@@ -231,15 +232,37 @@ export function NewsletterBuilder({ articles = [], initialSections = [] }: Newsl
     measure();
     const ro = new ResizeObserver(measure);
     if (previewRef.current) ro.observe(previewRef.current);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); roRef.current?.disconnect(); };
   }, []);
 
   const onPreviewLoad = () => {
-    const d = iframeRef.current?.contentDocument;
-    if (!d) return;
-    const h = Math.max(d.documentElement?.scrollHeight || 0, d.body?.scrollHeight || 0);
-    if (h) setEmailH(h);
+    const ifr = iframeRef.current;
+    const d = ifr?.contentDocument;
+    const w = ifr?.contentWindow;
+    if (!d || !w) return;
+    const measure = () => {
+      const h = Math.max(d.documentElement?.scrollHeight || 0, d.body?.scrollHeight || 0);
+      if (h) setEmailH(h);
+    };
+    measure();
+    // 이미지가 늦게 로드되면 본문 높이가 늘어나므로 로드 후 재측정 (초기 데이터 잘림 방지)
+    Array.from(d.images || []).forEach((img) => {
+      if (!img.complete) img.addEventListener('load', measure, { once: true });
+    });
+    roRef.current?.disconnect();
+    const RO = w.ResizeObserver || window.ResizeObserver;
+    if (RO && d.body) {
+      const ro = new RO(measure);
+      ro.observe(d.body);
+      roRef.current = ro;
+    }
   };
+
+  // 초기 마운트/내용 변경 시 직접 측정 (iframe onLoad가 하이드레이션 전에 발생해 놓치는 경우 대비)
+  useEffect(() => {
+    const id = window.setTimeout(onPreviewLoad, 80);
+    return () => window.clearTimeout(id);
+  }, [previewDoc]);
 
   const addSection = () => {
     idRef.current += 1;

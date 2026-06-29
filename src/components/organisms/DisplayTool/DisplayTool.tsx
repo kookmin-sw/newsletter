@@ -83,10 +83,21 @@ export function DisplayTool({ footerQr, articles = [], logo = '/images/newslette
   const entriesRef = useRef<HTMLDivElement>(null);
   const [entryScale, setEntryScale] = useState(1);
   useLayoutEffect(() => {
-    const avail = (midRef.current?.clientHeight ?? FH) - MID_PAD_Y * 2;
-    const natural = entriesRef.current?.scrollHeight ?? 0;
-    setEntryScale(natural > 0 && avail > 0 ? Math.min(1, avail / natural) : 1);
+    const measure = () => {
+      const avail = (midRef.current?.clientHeight ?? FH) - MID_PAD_Y * 2;
+      const natural = entriesRef.current?.scrollHeight ?? 0;
+      setEntryScale(natural > 0 && avail > 0 ? Math.min(1, avail / natural) : 1);
+    };
+    measure();
+    const raf = requestAnimationFrame(measure); // 레이아웃 안정 후 재측정
+    if (typeof document !== 'undefined' && document.fonts?.ready) document.fonts.ready.then(measure); // 폰트 로드 후
+    return () => cancelAnimationFrame(raf);
   }, [items, theme, active, vol, dateLabel, subtitle]);
+
+  // 기사 수가 많아지면 카드 위아래 여백·간격을 유동적으로 축소
+  const n = items.length;
+  const gap = n >= 9 ? 9 : n >= 7 ? 11 : n >= 6 ? 14 : n >= 5 ? 16 : 18;
+  const padY = n >= 9 ? 11 : n >= 8 ? 13 : n >= 7 ? 16 : n >= 6 ? 20 : n >= 5 ? 24 : n >= 4 ? 28 : 32;
 
   const upd = (i: number, patch: Partial<DisplayItem>) =>
     setItems((s) => s.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
@@ -210,13 +221,13 @@ export function DisplayTool({ footerQr, articles = [], logo = '/images/newslette
 
           {/* 기사 (가운데 영역, 세로 중앙, 넘치면 축소) */}
           <div ref={midRef} style={{ flex: '1 1 0', minHeight: 0, overflow: 'hidden', padding: `${MID_PAD_Y}px 48px`, display: 'flex', flexDirection: 'column' }}>
-            <div ref={entriesRef} style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', gap: 18, transform: `scale(${entryScale})`, transformOrigin: 'center' }}>
+            <div ref={entriesRef} style={{ flex: '1 1 0', minHeight: 0, display: 'flex', flexDirection: 'column', gap, transform: `scale(${entryScale})`, transformOrigin: 'top center' }}>
               {items.map((it, i) => {
                 const on = active === i;
                 return (
                   <div key={i} style={{
                     position: 'relative', background: on ? t.activeBg : t.card,
-                    border: on ? `2px solid ${BLUE}` : `1px solid ${t.cardBorder}`, borderRadius: 16, padding: '26px 34px',
+                    border: on ? `2px solid ${BLUE}` : `1px solid ${t.cardBorder}`, borderRadius: 16, padding: `${padY}px 34px`,
                     flex: '1 0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 12,
                   }}>
                     {/* 위: 번호·분류·기자 */}
