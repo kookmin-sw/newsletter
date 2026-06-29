@@ -1,0 +1,88 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { url } from '@/lib/path';
+
+const tools = [
+  {
+    href: '/tools/newsletter',
+    title: '뉴스레터 빌더',
+    desc: '폼으로 뉴스레터를 작성해 이메일 HTML과 뉴스(/news) 등록 커맨드를 생성합니다.',
+    icon: '✉️',
+  },
+  {
+    href: '/tools/display',
+    title: '디스플레이 생성기',
+    desc: '사이니지용 FHD 세로(1080×1920) 이미지를 만듭니다. 뉴스 import · 블랙/화이트 · 일괄 다운로드.',
+    icon: '🖥️',
+  },
+];
+---
+
+<BaseLayout title="도구" currentPath="/tools">
+  <section class="page-section">
+    <div class="narrow-container">
+      <h1 class="tools-title">도구</h1>
+      <p class="tools-sub">뉴스레터·디스플레이 제작 도구 모음</p>
+      <div class="tools-grid">
+        {tools.map((tItem) => (
+          <a href={url(tItem.href)} class="tool-card">
+            <span class="tool-icon">{tItem.icon}</span>
+            <span class="tool-name">{tItem.title}</span>
+            <span class="tool-desc">{tItem.desc}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tools-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 0.25rem;
+  }
+  .tools-sub {
+    color: #868e96;
+    margin: 0 0 2rem;
+  }
+  .tools-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .tools-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .tool-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 1rem;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .tool-card:hover {
+    border-color: #1a5bc4;
+    box-shadow: 0 6px 20px rgba(26, 91, 196, 0.12);
+    transform: translateY(-2px);
+  }
+  .tool-icon {
+    font-size: 1.75rem;
+  }
+  .tool-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .tool-desc {
+    font-size: 0.9rem;
+    color: #868e96;
+    line-height: 1.5;
+  }
+</style>
