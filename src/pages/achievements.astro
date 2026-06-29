@@ -1,0 +1,473 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SectionHeader } from '@/components/molecules/SectionHeader';
+import {
+  achievements,
+  groupByYear,
+  usedCategories,
+  getStats,
+  formatPerson,
+  formatMonthDay,
+  ACHIEVEMENT_CATEGORIES,
+} from '@/lib/achievements';
+
+const yearGroups = groupByYear(achievements);
+const categories = usedCategories(achievements);
+const stats = getStats(achievements);
+const total = stats.total;
+const maxYearCount = Math.max(...stats.byYear.map((y) => y.count), 1);
+---
+
+<BaseLayout title="성과" currentPath="/achievements">
+  <section class="page-section">
+    <div class="page-container ach-shell">
+      <div class="ach-header">
+        <SectionHeader
+          client:load
+          label="Achievements"
+          title="재학생·동문 성과"
+          description="재학생과 동문들의 대회 수상, 논문 게재, 특허 등 우수한 성과를 모았습니다."
+        />
+      </div>
+
+      {total > 0 ? (
+        <Fragment>
+          <div class="ach-stats">
+            <div class="ach-stats-nums">
+              <div class="ach-stat">
+                <span class="ach-stat-num">{stats.total}</span>
+                <span class="ach-stat-label">전체</span>
+              </div>
+              {stats.categories.map((c) => (
+                <div class="ach-stat">
+                  <span class="ach-stat-num" style={{ color: c.color }}>{c.count}</span>
+                  <span class="ach-stat-label">{c.label}</span>
+                </div>
+              ))}
+              <div class="ach-stat">
+                <span class="ach-stat-num">{stats.people}</span>
+                <span class="ach-stat-label">참여 학생</span>
+              </div>
+            </div>
+            <div class="ach-stats-chart">
+              <div class="ach-chart-title">연도별 성과</div>
+              <div class="ach-chart">
+                {stats.byYear.map((y) => (
+                  <div class="ach-bar-col">
+                    <span class="ach-bar-value">{y.count}</span>
+                    <div class="ach-bar" style={`height:${Math.round((y.count / maxYearCount) * 88)}px`}></div>
+                    <span class="ach-bar-year">{y.year}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="ach-filter" role="group" aria-label="카테고리 필터">
+            <button type="button" class="ach-chip is-active" data-filter="all">
+              전체 <span class="ach-chip-count">{total}</span>
+            </button>
+            {categories.map((c) => (
+              <button type="button" class="ach-chip" data-filter={c}>
+                {ACHIEVEMENT_CATEGORIES[c].label}
+              </button>
+            ))}
+          </div>
+
+          <div class="ach-board">
+            {yearGroups.map(([year, items]) => (
+              <section class="ach-year-group" data-year={year}>
+                <h2 class="ach-year">{year}</h2>
+                <ul class="ach-list">
+                  {items.map((item) => {
+                    const cat = ACHIEVEMENT_CATEGORIES[item.category];
+                    return (
+                      <li class="ach-item" data-category={item.category}>
+                        <div class="ach-date">{formatMonthDay(item.date)}</div>
+                        <div class="ach-content">
+                          <div class="ach-headline">
+                            <span class="ach-badge" style={{ color: cat.color, background: cat.background }}>
+                              {cat.label}
+                            </span>
+                            <span class="ach-title">{item.title}</span>
+                            {item.award && <span class="ach-award">{item.award}</span>}
+                          </div>
+                          <div class="ach-meta">
+                            <span class="ach-person">{formatPerson(item)}</span>
+                            {item.host && <span class="ach-host">{item.host}</span>}
+                            {item.link && (
+                              <a class="ach-link" href={item.link} target="_blank" rel="noopener noreferrer">
+                                자세히 ↗
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </div>
+
+          <p class="ach-empty" hidden>해당 카테고리의 성과가 없습니다.</p>
+        </Fragment>
+      ) : (
+        <p class="ach-empty-static">아직 등록된 성과가 없습니다.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* 콘텐츠 폭: 데스크탑에서 너무 넓게 퍼져 비어 보이지 않도록 가운데 좁은 열로 */
+  .page-container.ach-shell {
+    max-width: 920px;
+  }
+
+  /* 상단 요약 통계 */
+  .ach-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    align-items: stretch;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+    border-radius: 1rem;
+    background-color: #fff;
+  }
+  .ach-stats-nums {
+    flex: 1 1 240px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 1.25rem 2rem;
+  }
+  .ach-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .ach-stat-num {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #1a5bc4;
+    font-variant-numeric: tabular-nums;
+  }
+  .ach-stat-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #868e96;
+  }
+  /* 데스크탑·태블릿: 숫자들이 왼쪽에 몰리지 않게 가운데 정렬 */
+  @media (min-width: 641px) {
+    .ach-stats-nums {
+      justify-content: center;
+    }
+  }
+
+  .ach-stats-chart {
+    flex: 1 1 300px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 2.5rem;
+    border-left: 1px solid #eef0f2;
+  }
+  .ach-chart-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #868e96;
+    margin-bottom: 0.75rem;
+  }
+  .ach-chart {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1.5rem;
+    min-height: 120px;
+  }
+  .ach-bar-col {
+    flex: 0 0 auto;
+    width: 2.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.3rem;
+  }
+  .ach-bar-value {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #495057;
+    font-variant-numeric: tabular-nums;
+  }
+  .ach-bar {
+    width: 100%;
+    min-height: 3px;
+    background: linear-gradient(180deg, #4d89e5, #1a5bc4);
+    border-radius: 0.3rem 0.3rem 0 0;
+  }
+  .ach-bar-year {
+    font-size: 0.72rem;
+    color: #868e96;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 필터 칩 */
+  .ach-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .ach-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3rem 0.85rem;
+    border: none;
+    border-radius: 9999px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: #f1f3f5;
+    color: #495057;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .ach-chip:hover {
+    background-color: #dee2e6;
+  }
+  .ach-chip.is-active {
+    background-color: #1a5bc4;
+    color: #fff;
+  }
+  .ach-chip-count {
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+
+  /* 연도 그룹 */
+  .ach-board {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .ach-year-group[hidden] {
+    display: none;
+  }
+  .ach-year {
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #212529;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 항목 리스트 */
+  .ach-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .ach-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #f1f3f5;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s ease;
+  }
+  .ach-item[hidden] {
+    display: none;
+  }
+  .ach-item:hover {
+    background-color: #f8f9fa;
+  }
+  .ach-item:last-child {
+    border-bottom: none;
+  }
+
+  .ach-date {
+    flex: 0 0 auto;
+    width: 3rem;
+    padding-top: 0.15rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #868e96;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .ach-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .ach-headline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+  .ach-badge {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .ach-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #212529;
+    word-break: keep-all;
+  }
+  .ach-award {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a5bc4;
+  }
+
+  .ach-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    font-size: 0.85rem;
+    color: #868e96;
+  }
+  .ach-person {
+    color: #495057;
+    font-weight: 500;
+  }
+  .ach-host::before,
+  .ach-link::before {
+    content: '·';
+    margin-right: 0.5rem;
+    color: #ced4da;
+  }
+  .ach-link {
+    color: #1a5bc4;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .ach-link:hover {
+    text-decoration: underline;
+  }
+
+  .ach-empty,
+  .ach-empty-static {
+    text-align: center;
+    color: #868e96;
+    padding: 3rem 0;
+  }
+  .ach-empty[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    .ach-filter {
+      margin-bottom: 2rem;
+    }
+    .ach-item {
+      gap: 0.75rem;
+      padding: 0.85rem 0.25rem;
+    }
+    .ach-date {
+      width: 2.6rem;
+      font-size: 0.72rem;
+    }
+    .ach-title {
+      font-size: 0.95rem;
+    }
+  }
+
+  /* 모바일: 상단 영역(헤더·통계·필터)을 가운데 정렬처럼 보이게 */
+  @media (max-width: 640px) {
+    .ach-header {
+      text-align: center;
+    }
+    .ach-header :global(h2),
+    .ach-header :global(p) {
+      text-align: center;
+    }
+    .ach-header :global(hr) {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ach-stats {
+      justify-content: center;
+    }
+    .ach-stats-nums {
+      justify-content: center;
+    }
+    .ach-stat {
+      align-items: center;
+    }
+    .ach-chart-title {
+      text-align: center;
+    }
+    .ach-stats-chart {
+      max-width: none;
+      padding-left: 0;
+      border-left: none;
+    }
+
+    .ach-filter {
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  // 카테고리 필터 — 클라이언트에서 항목 표시/숨김 토글
+  function initAchievementFilter() {
+    const filter = document.querySelector<HTMLElement>('.ach-filter');
+    if (!filter || filter.dataset.bound === '1') return;
+    filter.dataset.bound = '1';
+
+    const chips = Array.from(filter.querySelectorAll<HTMLButtonElement>('.ach-chip'));
+    const items = Array.from(document.querySelectorAll<HTMLElement>('.ach-item'));
+    const groups = Array.from(document.querySelectorAll<HTMLElement>('.ach-year-group'));
+    const empty = document.querySelector<HTMLElement>('.ach-empty');
+
+    function apply(selected: string) {
+      let visible = 0;
+      items.forEach((el) => {
+        const show = selected === 'all' || el.dataset.category === selected;
+        el.hidden = !show;
+        if (show) visible++;
+      });
+      groups.forEach((g) => {
+        const anyVisible = Array.from(g.querySelectorAll<HTMLElement>('.ach-item')).some((el) => !el.hidden);
+        g.hidden = !anyVisible;
+      });
+      if (empty) empty.hidden = visible !== 0;
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        apply(chip.dataset.filter || 'all');
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initAchievementFilter);
+  initAchievementFilter();
+</script>
