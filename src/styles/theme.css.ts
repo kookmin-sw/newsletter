@@ -80,6 +80,8 @@ globalStyle('html', {
   textRendering: 'optimizeLegibility',
   WebkitTextSizeAdjust: '100%',
   scrollBehavior: 'smooth',
+  scrollPaddingTop: '6rem',
+  '@media': { '(prefers-reduced-motion: reduce)': { scrollBehavior: 'auto' } },
 });
 
 globalStyle('body', {

@@ -3,22 +3,23 @@ import { vars } from '@/styles/theme.css';
 import { space } from '@/styles/tokens/spacing.css';
 
 export const sectionHeaderWrapper = style({
-  marginBottom: space[10],
+  marginBottom: space[8],
 });
 
 export const sectionLabel = style({
   display: 'inline-block',
-  fontSize: '0.875rem',
+  fontSize: '0.75rem',
   fontWeight: '600',
   color: vars.color.primary,
   textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-  marginBottom: space[2],
+  letterSpacing: '0.12em',
+  marginBottom: space[3],
 });
 
 export const sectionDescription = style({
   marginTop: space[3],
   maxWidth: '640px',
+  fontSize: '1rem',
 });
 
 export const sectionDivider = style({

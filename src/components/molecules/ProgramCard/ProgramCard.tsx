@@ -1,6 +1,7 @@
 import { Badge } from '@/components/atoms/Badge';
 import {
   programCard,
+  programCardLink,
   programBadgeRow,
   programTitle,
   programDescription,
@@ -53,7 +54,7 @@ export function ProgramCard({
         href={href}
         target={href.startsWith('http') ? '_blank' : undefined}
         rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-        className={`${programCard}${className ? ` ${className}` : ''}`}
+        className={`${programCard} ${programCardLink}${className ? ` ${className}` : ''}`}
         style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
       >
         {content}

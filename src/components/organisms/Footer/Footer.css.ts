@@ -1,12 +1,14 @@
-import { style } from '@vanilla-extract/css';
+import { style, globalStyle } from '@vanilla-extract/css';
 import { space } from '@/styles/tokens/spacing.css';
 import { fontSize, fontWeight } from '@/styles/tokens/typography.css';
 import { colors } from '@/styles/tokens/colors.css';
 
 export const footer = style({
-  backgroundColor: colors.neutral[900],
-  color: colors.neutral[400],
-  paddingBlock: space[8],
+  backgroundColor: '#F7F8FA',
+  borderTop: `1px solid ${colors.neutral[200]}`,
+  color: colors.neutral[700],
+  paddingBlock: space[6],
+  '@media': { '(min-width: 900px)': { paddingBlock: space[8] } },
 });
 
 export const footerInner = style({
@@ -25,21 +27,30 @@ export const footerInner = style({
 
 export const footerGrid = style({
   display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: space[8],
+  gridTemplateColumns: 'minmax(0, 1fr)',
+  gap: space[4],
   '@media': {
-    '(min-width: 640px)': {
-      gridTemplateColumns: '1.6fr 1fr 1fr',
+    '(min-width: 900px)': {
+      gridTemplateColumns: '1.5fr 1fr 1.2fr',
       gap: space[10],
     },
   },
+});
+
+export const footerBrand = style({
+  gridColumn: '1 / -1',
+  '@media': { '(min-width: 900px)': { gridColumn: 'auto' } },
+});
+export const footerDescriptionExtra = style({
+  display: 'none',
+  '@media': { '(min-width: 900px)': { display: 'inline' } },
 });
 
 export const footerLogoSection = style({
   display: 'flex',
   alignItems: 'center',
   gap: space[3],
-  marginBottom: space[3],
+  marginBottom: space[2],
 });
 
 export const footerLogo = style({
@@ -49,8 +60,8 @@ export const footerLogo = style({
 
 export const footerTitle = style({
   fontSize: fontSize.lg,
-  fontWeight: fontWeight.bold,
-  color: colors.neutral[0],
+  fontWeight: fontWeight.semibold,
+  color: colors.neutral[900],
 });
 
 export const footerDescription = style({
@@ -62,36 +73,55 @@ export const footerDescription = style({
 export const footerColTitle = style({
   fontSize: fontSize.sm,
   fontWeight: fontWeight.semibold,
-  color: colors.neutral[200],
-  marginBottom: space[3],
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em',
+  color: colors.neutral[800],
+  marginBottom: space[2],
+  letterSpacing: '-0.01em',
 });
 
 export const footerLinkGroup = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: space[2],
+  gap: space[1],
 });
 
 export const footerLink = style({
   fontSize: fontSize.sm,
-  color: colors.neutral[400],
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: space[2],
+  minHeight: '24px',
+  width: 'fit-content',
+  maxWidth: '100%',
+  overflowWrap: 'anywhere',
+  color: colors.neutral[700],
   textDecoration: 'none',
   transition: 'color 0.15s ease',
   ':hover': {
-    color: colors.neutral[0],
+    color: colors.neutral[900],
   },
 });
 
 export const footerText = style({
+  display: 'none',
+  '@media': { '(min-width: 900px)': { display: 'inline' } },
   fontSize: fontSize.sm,
-  color: colors.neutral[400],
+  color: colors.neutral[700],
 });
 
 export const footerBottom = style({
-  marginTop: space[8],
-  paddingTop: space[6],
-  borderTop: `1px solid ${colors.neutral[800]}`,
+  marginTop: space[4],
+  paddingTop: space[4],
+  borderTop: `1px solid ${colors.neutral[200]}`,
   fontSize: fontSize.sm,
 });
+
+export const footerSites = style({
+  display: 'none',
+  '@media': { '(min-width: 900px)': { display: 'block' } },
+});
+export const footerSiteLinks = style({ whiteSpace: 'nowrap' });
+export const footerContact = style({
+  display: 'flex', alignItems: 'baseline', gap: space[4],
+  '@media': { '(min-width: 900px)': { display: 'block' } },
+});
+globalStyle(`${footerContact} > div:first-child`, { marginBottom: 0, '@media': { '(min-width: 900px)': { marginBottom: space[2] } } });

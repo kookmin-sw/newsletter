@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { Heading } from '@/components/atoms/Heading';
 import { Text } from '@/components/atoms/Text';
 import {
@@ -25,7 +24,7 @@ export function SectionHeader({
   description,
   align = 'left',
   level = 2,
-  showDivider = true,
+  showDivider = false,
   className,
 }: SectionHeaderProps) {
   return (

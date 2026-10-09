@@ -1,7 +1,7 @@
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/styles/theme.css';
 import { fontSize, fontWeight, fontFamily } from '@/styles/tokens/typography.css';
-import { radius, shadow, space } from '@/styles/tokens/spacing.css';
+import { space } from '@/styles/tokens/spacing.css';
 
 export const button = recipe({
   base: {
@@ -13,9 +13,14 @@ export const button = recipe({
     fontWeight: fontWeight.medium,
     lineHeight: 1,
     border: 'none',
-    borderRadius: radius.md,
+    borderRadius: '12px',
     cursor: 'pointer',
-    transition: 'all 0.2s ease',
+    transition: 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1), background-color 180ms ease, border-color 180ms ease, color 180ms ease',
+    ':active': { transform: 'scale(0.97)', transitionDuration: '90ms' },
+    '@media': {
+      '(hover: hover) and (pointer: fine)': { ':hover': { transform: 'translateY(-2px)' } },
+      '(prefers-reduced-motion: reduce)': { transition: 'none', ':hover': { transform: 'none' }, ':active': { transform: 'none' } },
+    },
     textDecoration: 'none',
     whiteSpace: 'nowrap',
     ':focus-visible': {
@@ -25,6 +30,7 @@ export const button = recipe({
     ':disabled': {
       opacity: 0.5,
       cursor: 'not-allowed',
+      transform: 'none',
     },
   },
   variants: {
@@ -38,8 +44,8 @@ export const button = recipe({
       },
       secondary: {
         backgroundColor: 'transparent',
-        color: vars.color.primary,
-        border: `1px solid ${vars.color.primary}`,
+        color: vars.color.text,
+        border: `1px solid ${vars.color.border}`,
         ':hover': {
           backgroundColor: vars.color.primaryLight,
         },
@@ -78,7 +84,7 @@ export const button = recipe({
       md: {
         fontSize: fontSize.base,
         padding: `${space[2]} ${space[5]}`,
-        height: '2.5rem',
+        height: '2.75rem',
       },
       lg: {
         fontSize: fontSize.lg,

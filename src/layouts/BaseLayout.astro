@@ -47,8 +47,12 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImageUrl} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  {ogImage === siteConfig.ogImage && <>
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+  </>}
+  <meta property="og:image:alt" content={pageTitle} />
   <meta property="og:locale" content="ko_KR" />
 
   <!-- Twitter Card -->
@@ -56,6 +60,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
+  <meta name="twitter:image:alt" content={pageTitle} />
 
   <title>{pageTitle}</title>
 
@@ -86,59 +91,20 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
   <link rel="sitemap" href={asset('/sitemap-index.xml')} />
   <ClientRouter />
   <style is:global>
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 1rem;
+      z-index: 1000;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      color: #1A5BC4;
+      border-radius: 0.75rem;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: translateY(0); }
     html {
       overflow-y: scroll;
-    }
-    /* Loading overlay */
-    #loading-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: #ffffff;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-    #loading-screen.hide {
-      opacity: 0;
-      visibility: hidden;
-    }
-    #loading-screen .spinner {
-      width: 48px;
-      height: 48px;
-      position: relative;
-    }
-    #loading-screen .spinner circle {
-      fill: none;
-      stroke-width: 4;
-      stroke-linecap: round;
-    }
-    #loading-screen .spinner .track {
-      stroke: #E8F0FE;
-    }
-    #loading-screen .spinner .fill {
-      stroke: #1A5BC4;
-      stroke-dasharray: 90 150;
-      stroke-dashoffset: 0;
-      animation: spinner-rotate 1.4s linear infinite, spinner-dash 1.4s ease-in-out infinite;
-      transform-origin: center;
-    }
-    @keyframes spinner-rotate {
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes spinner-dash {
-      0% { stroke-dasharray: 1 150; stroke-dashoffset: 0; }
-      50% { stroke-dasharray: 90 150; stroke-dashoffset: -35; }
-      100% { stroke-dasharray: 90 150; stroke-dashoffset: -124; }
-    }
-    #loading-screen .loading-text {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: #ADB5BD;
-      letter-spacing: 0.1em;
-      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     }
     #app-layout {
       display: flex;
@@ -178,20 +144,14 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
   </style>
 </head>
 <body>
-  <div id="loading-screen" aria-hidden="true">
-    <svg class="spinner" viewBox="0 0 50 50">
-      <circle class="track" cx="25" cy="25" r="20" />
-      <circle class="fill" cx="25" cy="25" r="20" />
-    </svg>
-    <span class="loading-text">KMU-CS Alumni</span>
-  </div>
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
   <div id="app-layout" class={layout}>
     <Header
       client:load
       navigation={siteConfig.navigation.map((n: any) => ({ ...n, href: url(n.href) }))}
       currentPath={currentPath}
     />
-    <main class={main}>
+    <main id="main-content" class={main} tabindex="-1">
       <slot />
     </main>
     <Footer
@@ -200,17 +160,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
     />
   </div>
   <script>
-    function hideLoading() {
-      const el = document.getElementById('loading-screen');
-      if (el) el.classList.add('hide');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', hideLoading);
-    } else {
-      hideLoading();
-    }
-
     // View Transitions: swap 전에 현재 페이지의 CSS를 새 문서에 복사
     document.addEventListener('astro:before-swap', (e) => {
       // <link rel="stylesheet"> 보존
@@ -230,7 +179,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
       });
     });
 
-    document.addEventListener('astro:page-load', hideLoading);
   </script>
 </body>
 </html>

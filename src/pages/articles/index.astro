@@ -36,7 +36,7 @@ const overflowCount = Math.max(0, sortedTags.length - VISIBLE_TAGS);
 
       {sortedTags.length > 0 && (
         <div class="tag-filter" data-collapsed="true">
-          <a href={url('/articles')} class="tag-btn tag-btn--active">전체</a>
+          <a href={url('/articles')} class="tag-btn tag-btn--active" aria-current="page">전체</a>
           {sortedTags.map((tag, i) => (
             <a
               href={url(`/articles/tags/${tag}`)}
@@ -79,12 +79,15 @@ const overflowCount = Math.max(0, sortedTags.length - VISIBLE_TAGS);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #E9ECEF;
   }
   .tag-btn {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.75rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
     border-radius: 9999px;
     font-size: 0.875rem;
     font-weight: 500;
@@ -110,8 +113,9 @@ const overflowCount = Math.max(0, sortedTags.length - VISIBLE_TAGS);
   .tag-more {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.75rem;
-    border: 1px dashed #CED4DA;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #CED4DA;
     border-radius: 9999px;
     font-family: inherit;
     font-size: 0.875rem;
@@ -131,9 +135,12 @@ const overflowCount = Math.max(0, sortedTags.length - VISIBLE_TAGS);
   }
   @media (min-width: 768px) {
     .article-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1.5rem;
     }
+  }
+  @media (min-width: 1024px) {
+    .article-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   .empty-msg {
     text-align: center;

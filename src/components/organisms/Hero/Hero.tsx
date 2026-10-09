@@ -1,23 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/atoms/Button';
-import {
-  hero,
-  heroBackground,
-  heroContent,
-  heroLabel,
-  heroTitle,
-  heroSubtitle,
-  heroActions,
-  heroStat,
-  heroStatItem,
-  heroStatValue,
-  heroStatLabel,
-  carouselContainer,
-  carouselSlide,
-  carouselOverlay,
-  carouselDots,
-  carouselDot,
-} from './Hero.css';
+import * as styles from './Hero.css';
 
 interface HeroStat {
   value: string;
@@ -25,12 +8,11 @@ interface HeroStat {
 }
 
 export interface CarouselSlide {
-  /** URL for background image, or omit to use gradient fallback */
   image?: string;
-  /** CSS gradient string used when image is not provided */
   gradient?: string;
-  /** Alt text for accessibility */
   alt?: string;
+  title?: string;
+  href?: string;
 }
 
 interface HeroProps {
@@ -40,102 +22,83 @@ interface HeroProps {
   primaryAction?: { label: string; href: string };
   secondaryAction?: { label: string; href: string };
   stats?: HeroStat[];
-  /** Carousel slides — if empty or omitted, original background is shown */
   slides?: CarouselSlide[];
-  /** Auto-advance interval in ms (default: 5000) */
   interval?: number;
 }
 
-export function Hero({
-  label,
-  title,
-  subtitle,
-  primaryAction,
-  secondaryAction,
-  stats,
-  slides = [],
-  interval = 5000,
-}: HeroProps) {
+export function Hero({ label, title, subtitle, primaryAction, secondaryAction, stats, slides = [], interval = 6500 }: HeroProps) {
   const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [interacting, setInteracting] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const hasSlides = slides.length > 0;
-
-  const advance = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  }, [slides.length]);
+  const slide = slides[current];
 
   useEffect(() => {
-    if (!hasSlides) return;
-    const timer = setInterval(advance, interval);
-    return () => clearInterval(timer);
-  }, [hasSlides, advance, interval]);
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (slides.length < 2 || paused || interacting || reducedMotion) return;
+    const timer = window.setInterval(() => setCurrent((index) => (index + 1) % slides.length), interval);
+    return () => window.clearInterval(timer);
+  }, [slides.length, interval, paused, interacting, reducedMotion]);
+
+  function selectSlide(index: number) {
+    setCurrent((index + slides.length) % slides.length);
+    setPaused(true);
+  }
 
   return (
-    <section className={hero}>
+    <section className={styles.hero} aria-label="동문 커뮤니티 소개">
       {hasSlides ? (
-        <>
-          <div className={carouselContainer} aria-hidden="true">
-            {slides.map((slide, i) => (
-              <div
-                key={i}
-                className={carouselSlide}
-                data-active={i === current}
-                style={{
-                  backgroundImage: slide.image
-                    ? `url(${slide.image})`
-                    : slide.gradient ?? undefined,
-                  background: !slide.image ? slide.gradient : undefined,
-                }}
-                role="img"
-                aria-label={slide.alt}
-              />
-            ))}
-            <div className={carouselOverlay} />
-          </div>
+        <div className={styles.carouselContainer} aria-hidden="true">
+          {slides.map((item, index) => (
+            <div key={item.image ?? index} className={styles.carouselSlide}
+              style={{ opacity: index === current ? 1 : 0, background: item.gradient }}>
+              {item.image && <img src={item.image} alt="" className={styles.carouselImage}
+                loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} />}
+            </div>
+          ))}
+          <div className={styles.carouselOverlay} />
+        </div>
+      ) : <div className={styles.heroBackground} aria-hidden="true" />}
 
-          <div className={carouselDots}>
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                className={carouselDot}
-                data-active={i === current}
-                onClick={() => setCurrent(i)}
-                aria-label={`슬라이드 ${i + 1}로 이동`}
-              />
-            ))}
-          </div>
-        </>
-      ) : (
-        <div className={heroBackground} aria-hidden="true" />
-      )}
-
-      <div className={heroContent}>
-        {label && <span className={heroLabel}>{label}</span>}
-        <h1 className={heroTitle}>{title}</h1>
-        {subtitle && <p className={heroSubtitle}>{subtitle}</p>}
-
-        {(primaryAction || secondaryAction) && (
-          <div className={heroActions}>
-            {primaryAction && (
-              <Button as="a" href={primaryAction.href} size="lg">
-                {primaryAction.label}
-              </Button>
-            )}
-            {secondaryAction && (
-              <Button as="a" href={secondaryAction.href} variant="ghost-light" size="lg">
-                {secondaryAction.label}
-              </Button>
-            )}
+      <div className={styles.heroContent}>
+        {label && <span className={styles.heroLabel}>{label}</span>}
+        <h1 className={styles.heroTitle}>{title}</h1>
+        {subtitle && <p className={styles.heroSubtitle}>{subtitle}</p>}
+        <div className={styles.heroActions}>
+          {primaryAction && <Button as="a" href={primaryAction.href} size="lg">{primaryAction.label}</Button>}
+          {secondaryAction && <Button as="a" href={secondaryAction.href} variant="ghost-light" size="lg">{secondaryAction.label}</Button>}
+        </div>
+        {stats && stats.length > 0 && (
+          <div className={styles.heroStat}>
+            {stats.map((stat) => <div key={stat.label} className={styles.heroStatItem}>
+              <span className={styles.heroStatValue}>{stat.value}</span>
+              <span className={styles.heroStatLabel}>{stat.label}</span>
+            </div>)}
           </div>
         )}
-
-        {stats && stats.length > 0 && (
-          <div className={heroStat}>
-            {stats.map((s) => (
-              <div key={s.label} className={heroStatItem}>
-                <span className={heroStatValue}>{s.value}</span>
-                <span className={heroStatLabel}>{s.label}</span>
-              </div>
-            ))}
+        {hasSlides && (
+          <div className={styles.carouselFooter}
+            onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
+            onFocus={() => setInteracting(true)}
+            onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
+            {slide.title && (slide.href
+              ? <a className={styles.carouselCaption} href={slide.href}>{slide.title}<span aria-hidden="true">↗</span></a>
+              : <span className={styles.carouselCaption}>{slide.title}</span>)}
+            {slides.length > 1 && <div className={styles.carouselControls}>
+              <button type="button" className={styles.carouselControl} onClick={() => selectSlide(current - 1)} aria-label="이전 사진">←</button>
+              <span className={styles.carouselCount}>{String(current + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span>
+              <button type="button" className={styles.carouselControl} onClick={() => selectSlide(current + 1)} aria-label="다음 사진">→</button>
+              {!reducedMotion && <button type="button" className={styles.carouselControl} onClick={() => setPaused(!paused)}
+                aria-label={paused ? '사진 자동 재생' : '사진 자동 재생 일시정지'}>{paused ? '▶' : 'Ⅱ'}</button>}
+            </div>}
           </div>
         )}
       </div>

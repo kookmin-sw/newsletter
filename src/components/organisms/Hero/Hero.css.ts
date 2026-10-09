@@ -1,187 +1,59 @@
-import { style, keyframes } from '@vanilla-extract/css';
-import { vars } from '@/styles/theme.css';
+import { style } from '@vanilla-extract/css';
 import { space } from '@/styles/tokens/spacing.css';
-import { fontSize, fontWeight, fontFamily, lineHeight, letterSpacing } from '@/styles/tokens/typography.css';
-import { colors } from '@/styles/tokens/colors.css';
+import { fontFamily } from '@/styles/tokens/typography.css';
 
 export const hero = style({
-  position: 'relative',
-  backgroundColor: colors.kmuBlue[900],
-  color: colors.neutral[0],
-  paddingBlock: space[20],
-  overflow: 'hidden',
-  '@media': {
-    '(max-width: 768px)': {
-      paddingBlock: space[12],
-    },
-  },
+  position: 'relative', backgroundColor: '#122033', color: '#fff', overflow: 'hidden',
+  paddingBlock: '4.5rem 1.5rem',
+  '@media': { '(max-width: 768px)': { paddingBlock: '3rem 1rem' } },
 });
-
-export const heroBackground = style({
-  position: 'absolute',
-  inset: 0,
-  opacity: 0.08,
-  background: `radial-gradient(circle at 30% 50%, ${colors.kmuBlue[400]}, transparent 60%),
-               radial-gradient(circle at 70% 80%, ${colors.kmuBlue[300]}, transparent 50%)`,
-});
-
-/* ── Carousel ── */
-
-export const carouselContainer = style({
-  position: 'absolute',
-  inset: 0,
-  zIndex: 0,
-});
-
-const kenBurns = keyframes({
-  '0%': { transform: 'scale(1)' },
-  '100%': { transform: 'scale(1.1)' },
-});
-
+export const heroBackground = style({ position: 'absolute', inset: 0, background: 'linear-gradient(120deg, #122033, #233e5b)' });
+export const carouselContainer = style({ position: 'absolute', inset: 0 });
 export const carouselSlide = style({
-  position: 'absolute',
-  inset: 0,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  opacity: 0,
-  transition: 'opacity 1.5s ease-in-out',
-  animation: `${kenBurns} 10s ease-in-out alternate infinite`,
-  selectors: {
-    '&[data-active="true"]': {
-      opacity: 1,
-    },
-  },
+  position: 'absolute', inset: 0, transition: 'opacity 950ms cubic-bezier(0.22, 1, 0.36, 1)',
+  '@media': { '(prefers-reduced-motion: reduce)': { transition: 'none' } },
 });
-
+export const carouselImage = style({ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' });
 export const carouselOverlay = style({
-  position: 'absolute',
-  inset: 0,
-  background: `linear-gradient(135deg, ${colors.kmuBlue[900]}ee 0%, ${colors.kmuBlue[900]}bb 50%, ${colors.kmuBlue[800]}99 100%)`,
-  zIndex: 1,
+  position: 'absolute', inset: 0,
+  background: 'linear-gradient(90deg, rgba(9,20,34,0.92) 0%, rgba(9,20,34,0.72) 44%, rgba(9,20,34,0.18) 100%), linear-gradient(0deg, rgba(9,20,34,0.75), transparent 35%)',
+  '@media': { '(max-width: 768px)': { background: 'linear-gradient(90deg, rgba(9,20,34,0.88), rgba(9,20,34,0.6))' } },
 });
-
-export const carouselDots = style({
-  position: 'absolute',
-  bottom: space[6],
-  left: '50%',
-  transform: 'translateX(-50%)',
-  display: 'flex',
-  gap: space[2],
-  zIndex: 3,
-  '@media': {
-    '(max-width: 768px)': {
-      bottom: space[3],
-    },
-  },
-});
-
-export const carouselDot = style({
-  width: '8px',
-  height: '8px',
-  borderRadius: '9999px',
-  border: 'none',
-  padding: 0,
-  cursor: 'pointer',
-  backgroundColor: 'rgba(255,255,255,0.4)',
-  transition: 'all 0.3s ease',
-  selectors: {
-    '&[data-active="true"]': {
-      backgroundColor: colors.neutral[0],
-      width: '24px',
-    },
-  },
-});
-
 export const heroContent = style({
-  position: 'relative',
-  maxWidth: '1200px',
-  marginInline: 'auto',
-  paddingInline: space[4],
-  '@media': {
-    '(min-width: 768px)': {
-      paddingInline: space[6],
-    },
-    '(min-width: 1024px)': {
-      paddingInline: space[8],
-    },
-  },
+  position: 'relative', maxWidth: '1200px', marginInline: 'auto', paddingInline: space[4],
+  '@media': { '(min-width: 768px)': { paddingInline: space[6] }, '(min-width: 1024px)': { paddingInline: space[8] } },
 });
-
-export const heroLabel = style({
-  display: 'inline-block',
-  fontSize: fontSize.sm,
-  fontWeight: fontWeight.semibold,
-  color: colors.kmuBlue[200],
-  letterSpacing: letterSpacing.wider,
-  textTransform: 'uppercase',
-  marginBottom: space[4],
-});
-
+export const heroLabel = style({ display: 'block', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.12em', color: '#D5E0EF', marginBottom: space[5] });
 export const heroTitle = style({
-  fontFamily: fontFamily.display,
-  fontSize: fontSize['5xl'],
-  fontWeight: fontWeight.extrabold,
-  lineHeight: lineHeight.tight,
-  letterSpacing: letterSpacing.tight,
-  maxWidth: '720px',
-  wordBreak: 'keep-all',
-  '@media': {
-    '(max-width: 768px)': {
-      fontSize: fontSize['3xl'],
-    },
-  },
+  fontFamily: fontFamily.display, fontSize: 'clamp(2rem, 3.8vw, 3.25rem)', fontWeight: 700,
+  lineHeight: 1.25, letterSpacing: '-0.04em', maxWidth: '680px', wordBreak: 'keep-all', textWrap: 'balance',
 });
-
 export const heroSubtitle = style({
-  fontSize: fontSize.xl,
-  fontWeight: fontWeight.regular,
-  lineHeight: lineHeight.subheading,
-  color: colors.kmuBlue[100],
-  maxWidth: '600px',
-  marginTop: space[5],
-  wordBreak: 'keep-all',
-  '@media': {
-    '(max-width: 768px)': {
-      fontSize: fontSize.lg,
-    },
-  },
+  fontSize: '1.0625rem', lineHeight: 1.75, color: '#DFE6EF', maxWidth: '530px', marginTop: space[5], wordBreak: 'keep-all',
+  '@media': { '(max-width: 768px)': { fontSize: '1rem' } },
 });
-
-export const heroActions = style({
-  display: 'flex',
-  gap: space[3],
-  marginTop: space[8],
-  flexWrap: 'wrap',
+export const heroActions = style({ display: 'flex', gap: space[3], marginTop: space[6], flexWrap: 'wrap' });
+export const heroStat = style({ display: 'flex', gap: space[8], marginTop: space[8], flexWrap: 'wrap' });
+export const heroStatItem = style({ display: 'flex', alignItems: 'baseline', gap: space[2] });
+export const heroStatValue = style({ fontSize: '1.5rem', fontWeight: 600, fontVariantNumeric: 'tabular-nums' });
+export const heroStatLabel = style({ fontSize: '0.8125rem', color: '#CDD7E4' });
+export const carouselFooter = style({
+  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: space[6],
+  marginTop: space[10], paddingTop: space[5], borderTop: '1px solid rgba(255,255,255,0.2)',
+  '@media': { '(max-width: 768px)': { flexDirection: 'column', alignItems: 'stretch', gap: space[3] } },
 });
-
-export const heroStat = style({
-  display: 'flex',
-  gap: space[8],
-  marginTop: space[12],
-  paddingTop: space[8],
-  borderTop: `1px solid rgba(255,255,255,0.15)`,
-  flexWrap: 'wrap',
-  '@media': {
-    '(max-width: 768px)': {
-      gap: space[6],
-      marginTop: space[8],
-    },
-  },
+export const carouselCaption = style({
+  display: 'flex', alignItems: 'center', gap: space[3], maxWidth: '720px', fontSize: '0.875rem',
+  lineHeight: 1.6, color: '#fff', textDecoration: 'none',
+  ':hover': { textDecoration: 'underline', textUnderlineOffset: '4px' },
 });
-
-export const heroStatItem = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: space[1],
+export const carouselControls = style({ display: 'flex', alignItems: 'center', gap: space[2], flexShrink: 0 });
+export const carouselControl = style({
+  width: '44px', height: '44px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)',
+  background: 'rgba(9,20,34,0.2)', color: '#fff', cursor: 'pointer', fontSize: '1rem',
+  transition: 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1), background-color 180ms ease',
+  ':hover': { background: 'rgba(255,255,255,0.15)', transform: 'scale(1.06)' },
+  ':active': { transform: 'scale(0.94)', transitionDuration: '90ms' },
+  '@media': { '(prefers-reduced-motion: reduce)': { transition: 'none', ':hover': { transform: 'none' }, ':active': { transform: 'none' } } },
 });
-
-export const heroStatValue = style({
-  fontSize: fontSize['3xl'],
-  fontWeight: fontWeight.bold,
-  color: colors.neutral[0],
-});
-
-export const heroStatLabel = style({
-  fontSize: fontSize.sm,
-  color: colors.kmuBlue[200],
-});
+export const carouselCount = style({ paddingInline: space[2], fontSize: '0.8125rem', fontVariantNumeric: 'tabular-nums', color: '#E4EAF2' });

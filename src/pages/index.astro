@@ -9,8 +9,6 @@ import { TimelineItem } from '@/components/molecules/TimelineItem';
 import { Button } from '@/components/atoms/Button';
 
 import { url, asset } from '@/lib/path';
-import fs from 'node:fs';
-import path from 'node:path';
 import timelineData from '@/content/config/timeline.json';
 import programsData from '@/content/config/programs.json';
 import initiativesData from '@/content/config/initiatives.json';
@@ -23,13 +21,16 @@ const latestArticles = allArticles
 const foundingYear = Math.min(...timelineData.map((t) => t.year));
 const historyYears = new Date().getFullYear() - foundingYear;
 
-const heroDir = path.join(process.cwd(), 'public/images/hero');
-const heroSlides = fs.existsSync(heroDir)
-  ? fs.readdirSync(heroDir)
-      .filter((f) => /\.(jpe?g|png|webp|avif)$/i.test(f))
-      .sort()
-      .map((f) => ({ image: asset(`/images/hero/${f}`), alt: path.parse(f).name }))
-  : [];
+const heroSlides = ['2026-kmucs-expo', '2025-career-week', '2025-kmu-cs-expo'].map((id) => {
+  const article = allArticles.find((entry) => entry.id === id);
+  if (!article?.data.coverImage) throw new Error(`캐러셀 기사 이미지 누락: ${id}`);
+  return {
+    image: asset(`/images/hero/${id}.webp`),
+    alt: article.data.title,
+    title: article.data.title,
+    href: url(`/articles/${article.id}`),
+  };
+});
 ---
 
 <BaseLayout currentPath="/">
@@ -82,7 +83,7 @@ const heroSlides = fs.existsSync(heroDir)
   </section>
 
   <section class="page-section timeline-section">
-    <div class="page-container">
+    <div class="page-container history-layout">
       <SectionHeader
         client:load
         label="History"
@@ -198,19 +199,10 @@ const heroSlides = fs.existsSync(heroDir)
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
-  .article-grid > :global(:nth-child(n+2)) {
-    display: none;
-  }
   @media (min-width: 768px) {
     .article-grid {
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
-    }
-    .article-grid > :global(:nth-child(n+2)) {
-      display: block;
-    }
-    .article-grid > :global(:nth-child(n+4)) {
-      display: none;
     }
   }
 
@@ -225,6 +217,14 @@ const heroSlides = fs.existsSync(heroDir)
 
   .timeline-wrapper {
     max-width: 640px;
+  }
+  @media (min-width: 1024px) {
+    .history-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 4rem;
+      align-items: start;
+    }
   }
 
   .program-grid {
@@ -244,9 +244,10 @@ const heroSlides = fs.existsSync(heroDir)
   }
 
   .cta-box {
-    background-color: #E8F0FE;
-    border-radius: 1rem;
-    padding: 3rem 2rem;
+    background-color: #F3F6FB;
+    border: 1px solid #E2E8F0;
+    border-radius: 1.5rem;
+    padding: 3.5rem 2rem;
     text-align: center;
   }
   @media (max-width: 768px) {
