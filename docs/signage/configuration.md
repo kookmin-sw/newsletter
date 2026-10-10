@@ -101,7 +101,7 @@ coverImage: "/images/articles/example.webp"
 - 기사 QR은 사이트의 `/articles/<articleId>/` 링크에서 빌드 시 자동 생성된다. 요약은 공개 JSON에도 들어가므로 공개 가능한 내용만 넣는다.
 - `draft: true` 기사와 뉴스레터는 재생 데이터에 넣을 수 없다.
 
-본문 요약·목록 설명 등 보통 굵기의 글자는 `public/fonts/Pretendard-Regular.woff2`, 굵은 기사 제목은 `KMU-Bold.ttf`를 사용한다. Pretendard 1.3.9 공식 파일과 SIL OFL 라이선스(`Pretendard-LICENSE.txt`)를 함께 보관한다. 상단 영문 표제와 숫자는 플레이어의 Arial 설정을 따른다. 외부 폰트 CDN 없이 오프라인 재생할 수 있다.
+본문 요약·목록 설명 등 보통 굵기의 글자는 `public/fonts/Pretendard-Regular.woff2`, 목록·상세 화면의 굵은 기사 제목은 `Pretendard-Bold.woff2`를 사용한다. Pretendard 1.3.9 공식 파일과 SIL OFL 라이선스(`Pretendard-LICENSE.txt`)를 함께 보관한다. 상단 영문 표제와 숫자는 플레이어의 Arial 설정을 따른다. 외부 폰트 CDN 없이 오프라인 재생할 수 있다.
 
 폰트 경로는 `src/lib/signage.ts`의 `branding`에서 지정한다. 경로 또는 파일이 바뀌면 빌드가 새 해시와 피드 revision을 생성한다. 기존 Windows 앱도 새 파일을 검증·캐시한 뒤 반복 경계에서 교체하므로, 이 폰트 변경에는 앱 재설치·재실행이 필요 없다.
 
