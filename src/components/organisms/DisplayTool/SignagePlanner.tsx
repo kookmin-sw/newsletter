@@ -92,7 +92,7 @@ export function SignagePlanner({ current, catalog, configuration, entries, newsl
       <div className="planner-step"><span>01</span><div><h2 id="layout-title">디스플레이 구성</h2><p>3대는 목록 하나에 상세 둘, 4대는 목록·상세 두 쌍으로 재생합니다.</p></div></div>
       <div className="planner-layouts">{([2, 3, 4] as const).map(n => <button type="button" key={n} aria-pressed={screenCount === n} onClick={() => resize(n)}><span className="planner-mini-screens">{Array.from({ length: n === 4 ? 2 : 1 }, (_, i) => <span key={i}><i>목록</i><i>{n === 3 ? '상세 1' : '상세'}</i>{n === 3 && <i>상세 2</i>}</span>)}</span><strong>{n}대 · {n === 4 ? '두 쌍' : '한 쌍'}</strong><small>{n === 3 ? '목록 하나에서 기사 두 개를 동시에' : n === 2 ? '선택한 기사를 한 세션으로' : '기사를 A·B 세션으로 나누어'}</small></button>)}</div>
       <p className="planner-hint">4대로 바꾸면 현재 기사를 반씩 나눕니다. 2대·3대로 돌아오면 중복 없이 합칩니다.</p>
-      {screenCount === 3 && <p className="planner-hint">1·2 → 3·4 순서로 두 기사씩 전환합니다. 재생시간은 두 기사 중 긴 시간에 맞추고, 홀수 개면 마지막 두 기사를 함께 표시합니다(7개: 1·2 → 3·4 → 5·6 → 6·7). 기사 한 개만 있으면 두 상세 화면에 같은 기사를 표시합니다.</p>}
+      {screenCount === 3 && <p className="planner-hint">같은 목록 페이지 안에서 두 기사씩 전환합니다. 재생시간은 두 기사 중 긴 시간에 맞추고, 페이지에 홀수 개가 있으면 마지막 두 기사를 함께 표시합니다(7개: 1·2 → 3·4 → 4·5 → 6·7). 기사 한 개만 있으면 두 상세 화면에 같은 기사를 표시합니다.</p>}
       {configuration.sessions.length > 2 && <p className="planner-hint">앞의 두 세션만 편집합니다. 나머지 {configuration.sessions.length - 2}개 세션은 다운로드 파일에 보존됩니다.</p>}
     </section>
     <section className="planner-section" aria-labelledby="articles-title">
