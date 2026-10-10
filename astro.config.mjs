@@ -14,7 +14,7 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap(),
+    sitemap({ filter: (page) => !/^\/signage(?:\/|$)/.test(new URL(page).pathname) }),
   ],
   vite: {
     plugins: [

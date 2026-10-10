@@ -1,0 +1,17 @@
+body { margin: 0; background: #0e1117; color: #e8edf4; font-family: system-ui, sans-serif; }
+  .preview-controls { max-width: 1240px; margin: auto; padding: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .preview-controls h1 { font-size: 22px; margin: 0 0 8px; }.preview-controls p { margin: 0; color: #a3afc0; font-size: 14px; }
+  .preview-controls > div { margin-right: auto; }
+  .preview-controls button, .preview-controls select { background: #1c2839; color: #fff; padding: 10px 14px; border: 1px solid #3b4f6b; border-radius: 8px; cursor: pointer; font: inherit; }
+  .preview-controls button[aria-pressed="true"] { background: #145bbb; }
+  .preview-controls nav { display: flex; flex-wrap: wrap; gap: 8px; }.preview-note { width: 100%; }
+  .preview-screens { display: flex; justify-content: center; gap: 24px; padding: 0 24px 32px; }
+  .preview-screens > section { width: min(45vw, 540px); aspect-ratio: 9 / 16; border: 1px solid #27334a; }
+  .single .preview-screens { padding: 0; height: 100vh; }.single .preview-screens > section { width: 100%; height: 100%; border: 0; }
+  .preview-error { color: #ffb7a8; text-align: center; }
+  @media (max-width: 640px) { .preview-screens { flex-direction: column; align-items: center; }.preview-screens > section { width: 100%; } }
+
+.preview-controls a { color: #9fc4ff; text-underline-offset: 4px; }
+
+.preview-screens.triple { gap: 16px; }.preview-screens.triple > section, .planner-preview .preview-screens.triple > section { width: min(28vw, 360px); }
+@media (max-width: 640px) { .preview-screens.triple > section, .planner-preview .preview-screens.triple > section { width: 100%; } }

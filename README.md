@@ -2,6 +2,18 @@
 
 국민대학교 소프트웨어융합대학 졸업 동문회 웹사이트입니다.
 
+## Windows 뉴스 사이니지
+
+이 저장소는 pnpm workspace로 웹사이트와 Windows 사이니지 앱을 함께 관리합니다.
+설치, 모니터 배정, 기사·요약·재생 시간 설정과 개발 방법은 [사이니지 문서](docs/signage/README.md)를 확인하세요.
+웹 미리보기는 `/signage/`, 운영 설정은 `src/content/config/signage.json`입니다.
+
+```sh
+pnpm dev              # 웹사이트와 사이니지 미리보기
+pnpm signage:demo     # 별도 터미널에서 목록·상세 창 실행, 첫 세션 설정에 따라 2개 또는 3개
+pnpm signage:dist     # Windows x64 설치 파일 생성
+```
+
 ## 기술 스택
 
 - **Framework**: Astro 6 (SSG)

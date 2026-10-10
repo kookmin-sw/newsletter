@@ -12,6 +12,8 @@ export interface ArticleFrontmatter {
   subtitle?: string;
   /** 요약 (목록에 표시, 미입력 시 본문 첫 200자) */
   excerpt?: string;
+  /** 사이니지 목록용 짧은 소개 */
+  displayExcerpt?: string;
   /** 작성일 (YYYY-MM-DD) */
   publishedAt: string;
   /** 수정일 */

@@ -1,0 +1,14 @@
+---
+import { getSignageManifest } from '@/lib/signage';
+import { SignagePreview } from '@/components/organisms/DisplayTool/SignagePreview';
+import '@/components/organisms/DisplayTool/signage-preview.css';
+const manifest = await getSignageManifest();
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" /><title>KMUCS 디스플레이 미리보기</title>
+  </head>
+  <body><SignagePreview client:load manifest={manifest} /></body>
+</html>

@@ -12,6 +12,7 @@ const articles = defineCollection({
     title: z.string(),
     subtitle: z.string().optional(),
     excerpt: z.string().optional(),
+    displayExcerpt: z.string().max(100).optional(),
     publishedAt: z.string().transform((s) => new Date(s)),
     updatedAt: z.string().transform((s) => new Date(s)).optional(),
     author: z.string(),
@@ -43,6 +44,7 @@ const news = defineCollection({
     source: z.string().optional(),
     sourceUrl: z.string().url().optional(),
     format: z.enum(['html']).optional(),
+    articleIds: z.array(z.string()).optional(),
   }),
 });
 

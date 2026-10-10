@@ -1,3 +1,5 @@
+import { issueLabel } from '@kmucs/signage-player';
+import { newsletterSlug } from '@/lib/newsletter-edition.mjs';
 import { useState, useRef, useEffect, type CSSProperties } from 'react';
 import { MASTHEAD_LOGO } from './mastheadLogo';
 
@@ -115,7 +117,7 @@ function buildEmailHtml(meta: Meta, sections: Section[]): string {
                 <td align="left" valign="middle">${logo}</td>
                 <td align="right" valign="middle">
                   <span style="font-size: 15px; color: #aaa; border: 1px solid #aaa; padding: 5px 12px; border-radius: 15px; margin-right: 5px;">${esc(meta.dateLabel)}</span>
-                  <span style="font-size: 15px; color: #fff; background-color: #0056b3; padding: 5px 12px; border-radius: 15px;">Vol. ${esc(meta.vol)}</span>
+                  <span style="font-size: 15px; color: #fff; background-color: #0056b3; padding: 5px 12px; border-radius: 15px;">${esc(issueLabel(meta.vol))}</span>
                 </td>
               </tr>
             </table>
@@ -140,13 +142,13 @@ ${sectionBlocks.join('\n        <tr><td height="25"></td></tr>\n')}
 
 /** mac/linux 터미널에 붙여넣으면: 머리말 SVG + 뉴스 글(.md) 생성 후 커밋 → /news 에 바로 노출 */
 function buildCommitCommand(meta: Meta, sections: Section[]): string {
-  const vol = meta.vol || '000';
-  const slug = `newsletter-${vol}`;
+  const vol = meta.vol.trim();
+  const slug = newsletterSlug(vol, meta.dateLabel);
   const svg = buildMastheadSvg(meta);
   const bodyHtml = buildEmailHtml({ ...meta, baseUrl: '' }, sections); // 사이트 내 렌더용 상대경로
   const yamlStr = (s: string) => `"${String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-  const title = meta.subtitle || `KMUCS ${vol}호 뉴스레터`;
-  const cardSubtitle = `${meta.dateLabel} · Vol. ${vol}`;
+  const title = meta.subtitle || `KMUCS ${/^\d+$/.test(vol) ? `${vol}호` : vol} 뉴스레터`;
+  const cardSubtitle = `${meta.dateLabel} · ${issueLabel(vol)}`;
   const lead = (sections.find((s) => s.desc)?.desc ?? '').replace(/\s+/g, ' ').trim();
   const excerpt = lead ? lead.slice(0, 140) : title;
   const dm = (meta.dateLabel || '').match(/^(\d{4})\.(\d{1,2})/);
@@ -159,7 +161,7 @@ function buildCommitCommand(meta: Meta, sections: Section[]): string {
     `publishedAt: "${publishedAt}"`,
     `author: "SW중심대학 기자단 '새움'"`,
     `coverImage: "/images/news/${slug}-cover.svg"`,
-    `tags: ["뉴스레터", "Vol.${vol}"]`,
+    `tags: ["뉴스레터", ${yamlStr(issueLabel(vol))}]`,
     'format: "html"',
     '---',
   ].join('\n');
@@ -172,7 +174,7 @@ function buildCommitCommand(meta: Meta, sections: Section[]): string {
     `cat > src/content/news/${slug}.md <<'KMUCS_MD_EOF'`,
     md,
     'KMUCS_MD_EOF',
-    `git add public/images/news/${slug}-cover.svg src/content/news/${slug}.md && git commit -m "News: ${slug} (Vol.${vol})"`,
+    `git add public/images/news/${slug}-cover.svg src/content/news/${slug}.md && git commit -m "News: ${slug} (${issueLabel(vol)})"`,
   ].join('\n');
 }
 
@@ -185,7 +187,7 @@ function buildMastheadSvg(meta: Meta): string {
   <rect x="372" y="40" width="82" height="30" rx="15" fill="none" stroke="#9aa0a6"/>
   <text x="413" y="60" fill="#c4c8cc" font-size="14" text-anchor="middle">${esc(meta.dateLabel)}</text>
   <rect x="464" y="40" width="90" height="30" rx="15" fill="#0056b3"/>
-  <text x="509" y="60" fill="#ffffff" font-size="14" font-weight="600" text-anchor="middle">Vol. ${esc(meta.vol)}</text>
+  <text x="509" y="60" fill="#ffffff" font-size="14" font-weight="600" text-anchor="middle">${esc(issueLabel(meta.vol))}</text>
   <line x1="36" y1="150" x2="564" y2="150" stroke="#ffffff" stroke-width="1"/>
   <text x="300" y="236" fill="#ffffff" font-size="68" font-weight="900" letter-spacing="2" text-anchor="middle">NEWS LETTER</text>
   <line x1="36" y1="266" x2="564" y2="266" stroke="#ffffff" stroke-width="1"/>
@@ -223,7 +225,10 @@ export function NewsletterBuilder({ articles = [], initialSections = [] }: Newsl
 
   const meta: Meta = { vol, dateLabel, subtitle, baseUrl, logo, publishedAt };
   const html = buildEmailHtml(meta, sections); // 발송·내보내기용 (절대경로)
-  const command = buildCommitCommand(meta, sections);
+  let command = '';
+  let editionError = '';
+  try { command = buildCommitCommand(meta, sections); }
+  catch (error) { editionError = error instanceof Error ? error.message : String(error); }
   // 미리보기용: 상대경로로 만들어 iframe(로컬 dev 서버)에서 이미지·로고를 바로 로드, 페이지 CSS와 격리
   const previewDoc = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background-color:#050505">${buildEmailHtml({ ...meta, baseUrl: '' }, sections)}</body></html>`;
 
@@ -250,7 +255,7 @@ export function NewsletterBuilder({ articles = [], initialSections = [] }: Newsl
       if (!img.complete) img.addEventListener('load', measure, { once: true });
     });
     roRef.current?.disconnect();
-    const RO = w.ResizeObserver || window.ResizeObserver;
+    const RO = window.ResizeObserver;
     if (RO && d.body) {
       const ro = new RO(measure);
       ro.observe(d.body);
@@ -304,7 +309,7 @@ export function NewsletterBuilder({ articles = [], initialSections = [] }: Newsl
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-          <div><label style={label}>호수 (Vol.)</label><input style={input} value={vol} onChange={(e) => setVol(e.target.value)} /></div>
+          <div><label style={label}>호수 또는 월호</label><input style={input} placeholder="004 또는 9월호" value={vol} onChange={(e) => setVol(e.target.value)} /></div>
           <div><label style={label}>발행 라벨 (마스트헤드)</label><input style={input} value={dateLabel} onChange={(e) => setDateLabel(e.target.value)} /></div>
           <div><label style={label}>발행일자 (정렬·표시)</label><input type="date" style={input} value={publishedAt} onChange={(e) => setPublishedAt(e.target.value)} /></div>
         </div>
@@ -350,9 +355,10 @@ export function NewsletterBuilder({ articles = [], initialSections = [] }: Newsl
           </div>
         ))}
 
+        {editionError && <p role="alert" style={{ color: '#C92A2A' }}>{editionError}</p>}
         <div style={{ marginTop: '1.25rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           <button type="button" onClick={() => copy(html, 'html')} style={btn(true)}>{copied === 'html' ? '복사됨 ✓' : '이메일 HTML 복사'}</button>
-          <button type="button" onClick={() => copy(command, 'cmd')} style={btn(false)}>{copied === 'cmd' ? '복사됨 ✓' : '뉴스 등록 커맨드 복사'}</button>
+          <button type="button" disabled={!!editionError} onClick={() => copy(command, 'cmd')} style={btn(false)}>{copied === 'cmd' ? '복사됨 ✓' : '뉴스 등록 커맨드 복사'}</button>
         </div>
         <p style={{ fontSize: '0.78rem', color: C.muted, marginTop: '0.5rem' }}>
           · <b>이메일 HTML</b>: Gmail 등에서 새 메일 작성 → 붙여넣기로 발송<br />

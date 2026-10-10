@@ -26,6 +26,8 @@ const articles = (await getCollection('articles', ({ data }) => !data.draft))
 <BaseLayout title="디스플레이 생성기" currentPath="/tools/display">
   <section class="page-section">
     <div class="page-container">
+      <p><a href="/signage/setup/">2대·3대·4대 디스플레이 편성 →</a></p>
+      <p><a href="/signage/">전체 화면 사이니지 미리보기 →</a></p>
       <DisplayTool client:load footerQr={footerQr} articles={articles} />
     </div>
   </section>

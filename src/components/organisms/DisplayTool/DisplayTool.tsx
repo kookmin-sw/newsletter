@@ -1,3 +1,4 @@
+import { issueLabel } from '@kmucs/signage-player';
 import { useState, useRef, useLayoutEffect, type CSSProperties } from 'react';
 import { toPng } from 'html-to-image';
 
@@ -153,7 +154,7 @@ export function DisplayTool({ footerQr, articles = [], logo = '/images/newslette
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.6rem' }}>
-          <div><label style={cLabel}>호수 (Vol.)</label><input style={cInput} value={vol} onChange={(e) => setVol(e.target.value)} /></div>
+          <div><label style={cLabel}>호수 또는 월호</label><input style={cInput} value={vol} onChange={(e) => setVol(e.target.value)} /></div>
           <div><label style={cLabel}>발행 라벨</label><input style={cInput} value={dateLabel} onChange={(e) => setDateLabel(e.target.value)} /></div>
           <div><label style={cLabel}>부제</label><input style={cInput} value={subtitle} onChange={(e) => setSubtitle(e.target.value)} /></div>
         </div>
@@ -207,7 +208,7 @@ export function DisplayTool({ footerQr, articles = [], logo = '/images/newslette
               <img src={logo} alt="국민대학교 소프트웨어융합대학 SW중심대학사업단" style={{ height: 40, width: 'auto', display: 'block', filter: t.logoFilter }} />
               <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <span style={{ border: `1px solid ${t.datePillBorder}`, color: t.datePillText, fontSize: 20, padding: '7px 17px', borderRadius: 22 }}>{dateLabel}</span>
-                <span style={{ background: '#0056b3', color: '#fff', fontSize: 20, fontWeight: 600, padding: '8px 17px', borderRadius: 22 }}>Vol. {vol}</span>
+                <span style={{ background: '#0056b3', color: '#fff', fontSize: 20, fontWeight: 600, padding: '8px 17px', borderRadius: 22 }}>{issueLabel(vol)}</span>
               </div>
             </div>
             <div style={{ height: 1, background: t.line, opacity: 0.85 }} />

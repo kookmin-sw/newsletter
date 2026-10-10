@@ -1,0 +1,55 @@
+{
+  "name": "@kmucs/signage-desktop",
+  "version": "1.2.1",
+  "private": true,
+  "type": "module",
+  "main": "src/main.mjs",
+  "description": "KMUCS 다중 모니터 뉴스 사이니지",
+  "author": "KMUCS",
+  "scripts": {
+    "dev": "vite build && install-electron && electron . --dev",
+    "demo": "vite build && install-electron && electron . --dev --demo",
+    "build": "vite build",
+    "check": "tsc --noEmit && node --check src/main.mjs && node --check src/storage.mjs && node --check src/preload.cjs",
+    "dist:win": "electron-builder --win nsis --x64",
+    "test:memory": "node scripts/memory-check.mjs"
+  },
+  "dependencies": {
+    "@kmucs/signage-player": "workspace:*",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "electron": "44.7.0",
+    "electron-builder": "26.15.3",
+    "playwright-core": "1.58.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  },
+  "build": {
+    "appId": "kr.ac.kookmin.cs.signage",
+    "productName": "KMUCS Signage",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "src/main.mjs",
+      "src/preload.cjs",
+      "src/storage.mjs",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  }
+}

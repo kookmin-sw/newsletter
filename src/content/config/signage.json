@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 3,
+  "pollIntervalSeconds": 60,
+  "sessions": [
+    {
+      "id": "lobby-a",
+      "newsletterId": "newsletter-003",
+      "title": "KMUCS 3호 뉴스레터",
+      "issue": "003",
+      "dateLabel": "2026.10",
+      "startsAt": "2026-10-10T00:00:00+09:00",
+      "defaultDurationSeconds": 20,
+      "transitionMilliseconds": 950
+    }
+  ]
+}
