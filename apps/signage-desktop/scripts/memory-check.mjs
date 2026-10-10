@@ -68,6 +68,9 @@ try {
   assert.equal(identity.profile, data);
   assert.equal((await setup.evaluate(() => window.signage.snapshot())).settings.autoStart, true, '기존 설정을 읽어야 합니다.');
   await setup.waitForFunction(() => document.querySelector('.app-brand img')?.naturalWidth === 512);
+  assert.equal((await setup.evaluate(() => window.signage.snapshot())).appUpdate.status, 'unsupported');
+  assert.equal(await setup.getByRole('button', { name: '새 버전 확인' }).isDisabled(), true);
+  await assert.rejects(setup.evaluate(() => window.signage.checkAppUpdate()), /설치된 Windows/);
   let pages;
   for (let i = 0; i < 150; i++) { pages = app.windows().filter((p) => p.url().includes('player=1')); if (pages.length === 2) break; await sleep(100); }
   assert.equal(pages.length, 2);

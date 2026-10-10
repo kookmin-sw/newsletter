@@ -9,17 +9,23 @@ import appIcon from '../assets/icon.png';
 
 interface Assignment { displayId: number; sessionId: string; role: ScreenRole }
 interface Settings { assignments: Assignment[]; autoStart: boolean }
+interface AppUpdate {
+  status: 'unsupported' | 'idle' | 'checking' | 'current' | 'available' | 'downloading' | 'ready' | 'installing' | 'error';
+  version: string | null; percent: number; error: string;
+}
 interface Snapshot {
   timelines: Record<string, Timeline>; candidate: Manifest | null; settings: Settings;
   displays: { id: number; label: string; bounds: { width: number; height: number }; scaleFactor: number; rotation: number }[];
   lastError: string; lastChecked: string | null; preparing: boolean; source: string;
   assignment: Assignment | null; cacheDirectory: string; version: string;
+  appUpdate: AppUpdate;
 }
 declare global {
   interface Window {
     signage: {
       snapshot(): Promise<Snapshot>; clock(): Promise<number>; saveSetup(settings: Settings): Promise<Snapshot>;
       refresh(): Promise<void>; prepared(revision: string, error?: string): Promise<void>; quit(): Promise<void>;
+      checkAppUpdate(): Promise<void>; downloadAppUpdate(): Promise<void>; installAppUpdate(): Promise<void>;
       subscribe(callback: (state: Snapshot) => void): () => void;
     };
   }
@@ -158,6 +164,23 @@ function Setup({ state }: { state: Snapshot }) {
     <label className="check"><input type="checkbox" checked={settings.autoStart} onChange={(e) => setSettings((s) => ({ ...s, autoStart: e.target.checked }))} /> Windows 로그인 후 자동 실행 (설치 버전에서 적용)</label>
     <div className="actions"><button className="primary" disabled={busy || !Object.keys(state.timelines).length} onClick={save}>{busy ? '저장 중' : '저장하고 실행'}</button><button disabled={state.preparing} onClick={() => window.signage.refresh().catch((e) => setMessage(String(e)))}>콘텐츠 다시 확인</button><button onClick={() => window.signage.quit()}>앱 종료</button></div>
     {message && <p role="status">{message}</p>}
+    <section className="app-update" aria-label="앱 업데이트">
+      <h2>앱 업데이트 <small>현재 {state.version}</small></h2>
+      <p role="status">{{
+        unsupported: '설치된 Windows 앱에서 사용할 수 있습니다.',
+        idle: '새 버전을 확인할 수 있습니다.', checking: '새 버전을 확인하고 있습니다.',
+        current: '최신 버전입니다.', available: `${state.appUpdate.version} 버전을 다운로드할 수 있습니다.`,
+        downloading: `다운로드 중 ${state.appUpdate.percent}%`, ready: `${state.appUpdate.version} 설치 준비가 끝났습니다.`,
+        installing: '설치 프로그램을 시작하고 있습니다.', error: `업데이트 실패: ${state.appUpdate.error}`,
+      }[state.appUpdate.status]}</p>
+      {state.appUpdate.status === 'downloading' && <progress max={100} value={state.appUpdate.percent} aria-label="업데이트 다운로드 진행률" />}
+      <div className="actions">
+        <button disabled={['unsupported', 'checking', 'downloading', 'ready', 'installing'].includes(state.appUpdate.status)} onClick={() => window.signage.checkAppUpdate().catch(e => setMessage(String(e)))}>새 버전 확인</button>
+        {state.appUpdate.status === 'available' && <button onClick={() => window.signage.downloadAppUpdate().catch(e => setMessage(String(e)))}>업데이트 다운로드</button>}
+        {state.appUpdate.status === 'ready' && <button className="primary" onClick={() => window.signage.installAppUpdate().catch(e => setMessage(String(e)))}>설치하고 다시 시작</button>}
+      </div>
+      <p className="hint">실행 시와 6시간마다 새 버전을 확인합니다. 설치 버튼을 누르기 전까지 뉴스 재생은 계속됩니다. 설치하면 재생이 잠시 중단됩니다.</p>
+    </section>
     <footer><p><kbd>Ctrl + Alt + S</kbd> 설정 열기 · <kbd>Ctrl + Alt + Q</kbd> 앱 종료</p><p>마지막 확인: {state.lastChecked ? new Date(state.lastChecked).toLocaleString('ko-KR') : '아직 없음'}</p><p>데이터: {state.source}</p><p>캐시: {state.cacheDirectory}</p><p>기사·요약·재생 시간은 alumni 저장소에서 수정하고 배포합니다. 이 창을 닫아도 재생은 계속됩니다.</p></footer>
   </main>;
 }

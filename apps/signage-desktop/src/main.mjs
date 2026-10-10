@@ -5,6 +5,7 @@ import { dirname, resolve, join, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initialTimelines, scheduleManifest, playbackAt, getSession, validateManifest } from '@kmucs/signage-player';
 import { atomicJson, readJson, fetchManifest, cacheAssets, assetName, digest, feedUrl, pruneAssets, validateAssignments, validateTimelines } from './storage.mjs';
+import { createAppUpdates } from './updates.mjs';
 
 const directory = dirname(fileURLToPath(import.meta.url));
 const development = !app.isPackaged && process.argv.includes('--dev');
@@ -31,6 +32,7 @@ let cacheDirty = true;
 let quitting = false;
 let changingWindows = false;
 let blocker;
+let updates;
 let cacheDirectory;
 let dataDirectory;
 let saveChain = Promise.resolve();
@@ -56,6 +58,7 @@ function snapshot(record) {
     preparing: fetching || !!candidate, source: source.href,
     assignment: record?.assignment ?? null,
     cacheDirectory, version: app.getVersion(),
+    appUpdate: updates?.state ?? { status: 'unsupported', version: null, percent: 0, error: '' },
   };
 }
 
@@ -254,6 +257,22 @@ async function start() {
   ipcMain.handle('clock', (event) => { trusted(event); return now(); });
   ipcMain.handle('refresh', async (event) => { trusted(event, true); await refresh(); });
   ipcMain.handle('quit', (event) => { trusted(event, true); app.quit(); });
+  ipcMain.handle('check-app-update', async (event) => {
+    trusted(event, true);
+    if (!updates) throw new Error('설치된 Windows 앱에서 사용할 수 있습니다.');
+    await updates.check();
+  });
+  ipcMain.handle('download-app-update', async (event) => {
+    trusted(event, true);
+    if (!updates) throw new Error('설치된 Windows 앱에서 사용할 수 있습니다.');
+    await updates.download();
+  });
+  ipcMain.handle('install-app-update', async (event) => {
+    trusted(event, true);
+    if (!updates) throw new Error('설치된 Windows 앱에서 사용할 수 있습니다.');
+    await persist();
+    updates.install();
+  });
   ipcMain.handle('save-setup', async (event, value) => {
     trusted(event, true);
     if (!value || typeof value.autoStart !== 'boolean') throw new Error('자동 실행 설정 오류');
@@ -295,7 +314,17 @@ async function start() {
   reconcileWindows();
   if (!players.size || lastError) openSetup();
   refresh().catch(report);
+  if (process.platform === 'win32' && app.isPackaged) {
+    try {
+      const { default: electronUpdater } = await import('electron-updater');
+      updates = createAppUpdates(electronUpdater.autoUpdater, () => {
+        if (setupWindow && !setupWindow.isDestroyed()) setupWindow.webContents.send('state', snapshot());
+      });
+      updates.check();
+    } catch (error) { report(new Error(`앱 업데이트 초기화 실패: ${error.message}`)); }
+  }
   let lastPoll = now();
+  let lastUpdateCheck = now();
   let maintaining = false;
   setInterval(async () => {
     if (maintaining) return;
@@ -319,6 +348,7 @@ async function start() {
         } finally { pruning = false; }
       }
       if (now() - lastPoll >= (latest?.pollIntervalSeconds ?? 60) * 1000) { lastPoll = now(); await refresh(); }
+      if (updates && now() - lastUpdateCheck >= 6 * 60 * 60 * 1000) { lastUpdateCheck = now(); updates.check(); }
     } catch (e) { report(e); }
     finally { maintaining = false; }
   }, 1000);
