@@ -39,7 +39,7 @@ async function buildManifest(): Promise<Manifest> {
   const sources = summarySources(news);
   const branding = {
     siteUrl: site.siteUrl, logo: '/images/newsletter-logo.png',
-    fontRegular: '/fonts/KMU-Regular.ttf', fontBold: '/fonts/KMU-Bold.ttf', qr: await qr(site.siteUrl),
+    fontRegular: '/fonts/Pretendard-Regular.woff2', fontBold: '/fonts/KMU-Bold.ttf', qr: await qr(site.siteUrl),
   };
   const paths = new Set([branding.logo, branding.fontRegular, branding.fontBold]);
   const sessions = await Promise.all(settings.sessions.map(async (s) => {

@@ -116,6 +116,17 @@ Windows 배율이 125% 또는 150%여도 전체 콘텐츠를 창 크기에 맞�
 
 업데이트 다운로드는 HTTPS와 `latest.yml`의 SHA-512 해시로 파일을 검증한다. 이는 파일 일치 검사이며 배포자의 신원을 보증하는 코드 서명을 대체하지 않는다. 서명 도입 시 CI에 인증서를 안전하게 연결하고 Windows의 실제 신뢰 상태를 별도로 확인한다. 서명한 파일도 평판에 따라 경고가 남을 수 있다. [Microsoft SmartScreen 안내](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation)
 
+### 스마트 앱 컨트롤이 앱의 일부를 차단한 경우
+
+‘스마트 앱 컨트롤이 이 앱의 일부를 차단했습니다’는 SmartScreen의 평판 경고와 별개다. 앱에서 불러온 실행 파일·DLL 등의 신뢰 또는 서명을 확인하지 못해 기능 일부가 막힐 수 있다. 최초 설치가 성공해도 업데이트 중 호출하는 파일이 차단될 수 있다. [Microsoft 안내](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-has-blocked-part-of-this-app)
+
+1. 알림의 **자세히 알아보기**, 또는 Windows 보안의 **바이러스 및 위협 방지 → 보호 기록**에서 차단된 파일 이름과 경로를 확인한다.
+2. 기록을 찾지 못하면 이벤트 뷰어의 **응용 프로그램 및 서비스 로그 → Microsoft → Windows → CodeIntegrity → Operational**에서 같은 시각의 차단 이벤트를 확인한다.
+3. 설치 파일, `old-uninstaller.exe`, `elevate.exe`, DLL 등 어떤 구성 요소인지 구분한다. 현재 NSIS 업데이트 경로는 이전 제거 프로그램을 임시 폴더에 복사해 실행하므로 제거 프로그램도 확인 대상이다. 파일 이름을 확인하기 전에는 특정 구성 요소가 원인이라고 단정하지 않는다.
+4. 배포 측에서 해당 파일을 포함한 설치·업데이트 실행 체인의 서명과 신뢰를 검증한다. 신뢰된 인증서 또는 서명 서비스가 필요하며 자체 서명만으로 신뢰가 생기지는 않는다. 기존 미서명 제거 프로그램이 차단된다면 새 설치 파일만 서명해도 기존 버전 교체 경로에는 문제가 남을 수 있어 별도 검증이 필요하다.
+
+현재 배포본에는 코드 서명이 없으며 이 문제의 해결을 확인하지 못했다. 차단된 상태에서 반복 설치나 보안 기능 해제에 의존하지 않는다. 실행 가능한 기존 앱의 기사·편성·폰트 갱신은 사이트 피드로 이루어지므로 앱 설치 프로그램을 실행할 필요가 없다. [서명 안내](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/code-signing-for-smart-app-control)
+
 ## 개발용 주소
 
 개발 서버 포트가 4322라면 PowerShell에서 다음처럼 실행한다.
