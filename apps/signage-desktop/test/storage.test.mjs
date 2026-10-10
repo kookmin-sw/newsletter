@@ -13,11 +13,12 @@ test('HTTPS만 허용하고 개발 중 로컬 HTTP만 예외로 허용한다', (
   for (const url of ['http://example.com/a', 'file:///etc/passwd', 'https://a:b@example.com', 'http://localhost/a']) assert.throws(() => feedUrl(url));
 });
 
-test('4개 모니터의 2세션 배정과 중복·누락 배정을 검증한다', () => {
+test('4개 모니터의 2세션과 단일 역할을 허용하고 중복·미연결 배정을 거절한다', () => {
   const displays = [1, 2, 3, 4].map((id) => ({ id }));
   const assignments = [1, 2, 3, 4].map((displayId) => ({ displayId, sessionId: displayId <= 2 ? 'a' : 'b', role: displayId % 2 ? 'list' : 'detail' }));
   assert.equal(validateAssignments(assignments, displays, ['a', 'b']).length, 4);
-  assert.throws(() => validateAssignments([assignments[0]], displays, ['a']));
+  assert.equal(validateAssignments([assignments[0]], displays, ['a']).length, 1);
+  assert.equal(validateAssignments([assignments[1]], displays, ['a']).length, 1);
   assert.throws(() => validateAssignments([assignments[0], assignments[0]], displays, ['a']));
   assert.throws(() => validateAssignments(assignments, displays.slice(1), ['a', 'b']));
   assert.deepEqual(validateAssignments([], displays, ['a']), []);
@@ -88,12 +89,13 @@ test('용량 초과 오류에 실패 파일과 제한을 표시하고 불완전�
   }
 });
 
-test('3대 세션은 목록·상세 1·상세 2 배정을 요구하고 2대 설정과 혼동하지 않는다', () => {
+test('3대 세션의 역할을 PC별로 나눌 수 있고 2대 설정의 상세 2는 거절한다', () => {
   const displays = [1, 2, 3].map(id => ({ id }));
   const assignments = ['list', 'detail', 'detail-secondary'].map((role, i) => ({ displayId: i + 1, sessionId: 'a', role }));
   assert.equal(validateAssignments(assignments, displays, ['a'], { a: 2 }).length, 3);
   assert.equal(validateAssignments(assignments, displays, ['a']).length, 3);
-  assert.throws(() => validateAssignments(assignments.slice(0, 2), displays, ['a'], { a: 2 }), /상세 2/);
+  assert.equal(validateAssignments(assignments.slice(0, 2), displays, ['a'], { a: 2 }).length, 2);
+  assert.equal(validateAssignments([assignments[2]], displays, ['a'], { a: 2 }).length, 1);
   assert.throws(() => validateAssignments(assignments, displays, ['a'], { a: 1 }), /3대 편성/);
-  assert.throws(() => validateAssignments([assignments[0], assignments[2]], displays, ['a']), /모두 배정/);
+  assert.equal(validateAssignments([assignments[0], assignments[2]], displays, ['a']).length, 2);
 });

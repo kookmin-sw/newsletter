@@ -99,8 +99,6 @@ export function validateAssignments(assignments, displays, sessions, detailCount
     set.add(row.role); roles.set(row.sessionId, set);
   }
   for (const [id, set] of roles) {
-    if (!set.has('list') || !set.has('detail')) throw new Error('각 세션에 목록과 상세 화면을 모두 배정하세요.');
-    if (detailCounts[id] === 2 && !set.has('detail-secondary')) throw new Error('3대 세션에는 뉴스 상세 2 화면도 배정하세요.');
     if (detailCounts[id] === 1 && set.has('detail-secondary')) throw new Error('상세 2를 사용하려면 사이트에서 3대 편성을 적용하세요.');
   }
   return assignments;

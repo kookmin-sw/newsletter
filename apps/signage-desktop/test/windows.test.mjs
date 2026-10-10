@@ -66,6 +66,17 @@ test('끊어진 모니터와 종료된 창은 표시하지 않는다', () => {
   assert.equal(destroyed.state.visible, false);
 });
 
+test('이 PC에 배정된 한 화면만 준비되어도 다른 PC의 역할을 기다리지 않고 표시한다', () => {
+  for (const role of ['list', 'detail', 'detail-secondary']) {
+    const record = fixture(1);
+    record.assignment.role = role;
+    showPreparedPairs([record], null, displays);
+    assert.equal(record.state.visible, true);
+    assert.equal(record.state.kiosk, true);
+    assert.deepEqual(record.state.bounds, displays[0].bounds);
+  }
+});
+
 test('데모와 다른 운영체제는 기존 비활성 표시와 창 크기를 유지한다', () => {
   const record = fixture(1);
   showPreparedPairs([record], null, null);

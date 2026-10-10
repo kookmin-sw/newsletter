@@ -7,6 +7,7 @@ import { initialTimelines, scheduleManifest, playbackAt, getSession, validateMan
 import { atomicJson, readJson, fetchManifest, cacheAssets, assetName, digest, feedUrl, pruneAssets, validateAssignments, validateTimelines } from './storage.mjs';
 import { createAppUpdates } from './updates.mjs';
 import { showPreparedPairs as presentPreparedPairs } from './windows.mjs';
+import { createPlaybackClock } from './clock.mjs';
 
 const directory = dirname(fileURLToPath(import.meta.url));
 const development = !app.isPackaged && process.argv.includes('--dev');
@@ -37,9 +38,8 @@ let updates;
 let cacheDirectory;
 let dataDirectory;
 let saveChain = Promise.resolve();
-let clockEpoch = Date.now();
-let clockOrigin = performance.now();
-const now = () => clockEpoch + performance.now() - clockOrigin;
+const clock = createPlaybackClock();
+const now = clock.now;
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'signage', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 if (!app.requestSingleInstanceLock()) app.quit();
@@ -59,6 +59,7 @@ function snapshot(record) {
     preparing: fetching || !!candidate, source: source.href,
     assignment: record?.assignment ?? null,
     cacheDirectory, version: app.getVersion(),
+    clock: clock.state,
     appUpdate: updates?.state ?? { status: 'unsupported', version: null, percent: 0, error: '' },
   };
 }
@@ -182,7 +183,7 @@ async function refresh() {
     lastChecked = new Date().toISOString();
     if (manifest.revision !== latest?.revision) {
       await cacheAssets(manifest, source, cacheDirectory);
-      candidate = { manifest, ready: new Set(), startedAt: now(), committing: false };
+      candidate = { manifest, ready: new Set(), startedAt: performance.now(), committing: false };
       broadcast();
       await commitCandidate();
     }
@@ -244,6 +245,12 @@ async function start() {
       const assets = new Map(manifests.flatMap((m) => m.assets.map((a) => [assetName(a), a])));
       for (const [name, asset] of assets) if (digest(await readFile(join(cacheDirectory, name))) !== asset.sha256) throw new Error('저장된 이미지 또는 폰트 손상. 네트워크에서 다시 받습니다.');
       timelines = saved.timelines; latest = saved.latest;
+      // Older apps saved a per-PC epoch after updates; restore the shared epoch.
+      for (const timeline of Object.values(timelines)) {
+        timeline.current = timeline.pending?.playback ?? timeline.current;
+        timeline.current.epoch = Date.parse(getSession(timeline.current).startsAt);
+        delete timeline.pending;
+      }
     }
   } catch (e) { report(e); }
 
@@ -302,9 +309,9 @@ async function start() {
     if (settings.assignments.some((a) => !screen.getAllDisplays().some((d) => d.id === a.displayId))) openSetup();
   });
   powerMonitor.on('resume', () => {
-    clockEpoch = Date.now(); clockOrigin = performance.now();
-    broadcast(); refresh().catch(report);
+    clock.sync({ reset: true }).then(() => { broadcast(); return refresh(); }).catch(report);
   });
+  await clock.sync();
   reconcileWindows();
   if (!players.size || lastError) openSetup();
   refresh().catch(report);
@@ -317,14 +324,15 @@ async function start() {
       updates.check();
     } catch (error) { report(new Error(`앱 업데이트 초기화 실패: ${error.message}`)); }
   }
-  let lastPoll = now();
-  let lastUpdateCheck = now();
+  let lastPoll = performance.now();
+  let lastUpdateCheck = performance.now();
+  let lastClockCheck = performance.now();
   let maintaining = false;
   setInterval(async () => {
     if (maintaining) return;
     maintaining = true;
     try {
-      if (candidate && !candidate.committing && now() - candidate.startedAt > 45000) { candidate = null; report(new Error('모든 화면의 준비 확인을 받지 못해 기존 재생을 유지합니다.')); }
+      if (candidate && !candidate.committing && performance.now() - candidate.startedAt > 45000) { candidate = null; report(new Error('모든 화면의 준비 확인을 받지 못해 기존 재생을 유지합니다.')); }
       let changed = false;
       const keep = new Set([...(latest?.sessions.map((s) => s.id) ?? []), ...assignmentRows().map((a) => a.sessionId)]);
       for (const id of Object.keys(timelines)) if (!keep.has(id)) { delete timelines[id]; changed = true; }
@@ -341,8 +349,9 @@ async function start() {
           cacheDirty = false;
         } finally { pruning = false; }
       }
-      if (now() - lastPoll >= (latest?.pollIntervalSeconds ?? 60) * 1000) { lastPoll = now(); await refresh(); }
-      if (updates && now() - lastUpdateCheck >= 6 * 60 * 60 * 1000) { lastUpdateCheck = now(); updates.check(); }
+      if (performance.now() - lastClockCheck >= 5 * 60 * 1000) { lastClockCheck = performance.now(); await clock.sync(); broadcast(); }
+      if (performance.now() - lastPoll >= (latest?.pollIntervalSeconds ?? 60) * 1000) { lastPoll = performance.now(); await refresh(); }
+      if (updates && performance.now() - lastUpdateCheck >= 6 * 60 * 60 * 1000) { lastUpdateCheck = performance.now(); updates.check(); }
     } catch (e) { report(e); }
     finally { maintaining = false; }
   }, 1000);

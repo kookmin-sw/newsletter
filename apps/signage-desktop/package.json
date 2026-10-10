@@ -1,6 +1,6 @@
 {
   "name": "@kmucs/signage-desktop",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "private": true,
   "type": "module",
   "main": "src/main.mjs",
@@ -10,7 +10,7 @@
     "dev": "vite build && install-electron && electron . --dev",
     "demo": "vite build && install-electron && electron . --dev --demo",
     "build": "vite build",
-    "check": "tsc --noEmit && node --check src/main.mjs && node --check src/storage.mjs && node --check src/updates.mjs && node --check src/windows.mjs && node --check src/preload.cjs",
+    "check": "tsc --noEmit && node --check src/main.mjs && node --check src/storage.mjs && node --check src/updates.mjs && node --check src/windows.mjs && node --check src/clock.mjs && node --check src/preload.cjs",
     "dist:win": "electron-builder --win nsis --x64 --publish never",
     "test:memory": "node scripts/memory-check.mjs"
   },
@@ -48,6 +48,7 @@
       "src/storage.mjs",
       "src/updates.mjs",
       "src/windows.mjs",
+      "src/clock.mjs",
       "assets/icon.png",
       "package.json"
     ],

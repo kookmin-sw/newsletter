@@ -120,5 +120,6 @@ test('3대 콘텐츠 갱신은 세 화면 모두 같은 반복 경계에서 적�
   assert.equal(playbackAt(scheduled, epoch + 59999).manifest.revision, initial.revision);
   const active = playbackAt(scheduled, epoch + 60000);
   assert.equal(active.manifest.revision, next.revision);
-  assert.deepEqual(frameAt(active.manifest.sessions[0], active.epoch, epoch + 60000).indices, [0, 1]);
+  assert.equal(active.epoch, epoch);
+  assert.deepEqual(frameAt(active.manifest.sessions[0], active.epoch, epoch + 60000).indices, [1, 2]);
 });

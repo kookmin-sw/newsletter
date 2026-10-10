@@ -239,7 +239,7 @@ export function scheduleManifest(timelines: Record<string, Timeline>, manifest: 
     }
     const current = playbackAt(existing, now);
     const activateAt = nextCycleAt(current, now + 2000);
-    const epoch = session.startsAt === getSession(current).startsAt ? activateAt : Date.parse(session.startsAt);
+    const epoch = Date.parse(session.startsAt);
     next[session.id] = { current, pending: { activateAt, playback: { manifest, sessionId: session.id, epoch } } };
   }
   // Only assigned removed sessions retain their last playlist.

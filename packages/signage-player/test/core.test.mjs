@@ -31,7 +31,7 @@ test('미래 시작, 한 기사, 전환 없음, 빈 목록을 처리한다', () 
   assert.throws(() => frameAt(s, 0, 0), /빈 재생/);
 });
 
-test('설정은 기존 반복 경계까지 유지하고 이후 새 목록의 첫 기사부터 시작한다', () => {
+test('설정은 기존 반복 경계까지 유지하고 이후에도 공통 시작 시각을 사용한다', () => {
   const m = fixture();
   const original = initialTimelines(m);
   const epoch = original['lobby-a'].current.epoch;
@@ -41,8 +41,28 @@ test('설정은 기존 반복 경계까지 유지하고 이후 새 목록의 첫
   assert.equal(playbackAt(scheduled, epoch + 59999).manifest.revision, m.revision);
   const current = playbackAt(scheduled, epoch + 60000);
   assert.equal(getSession(current).items[0].id, 'article-2');
+  assert.equal(current.epoch, epoch);
   assert.equal(frameAt(getSession(current), current.epoch, epoch + 60000).index, 0);
   assert.equal(original['lobby-a'].pending, undefined);
+});
+
+test('서로 다른 PC의 갱신·재시작·누락된 배포 이력과 관계없이 같은 재생 위치로 합류한다', () => {
+  const first = fixture();
+  const initial = initialTimelines(first);
+  const epoch = initial['lobby-a'].current.epoch;
+  const next = fixture(); next.revision = 'd'.repeat(64);
+  next.sessions[0].items[0].durationSeconds = 17;
+  const a = scheduleManifest(initial, next, epoch + 1000)['lobby-a'];
+  const b = scheduleManifest(initial, next, epoch + 70000)['lobby-a'];
+  const restarted = initialTimelines(next)['lobby-a'];
+  assert.notEqual(a.pending.activateAt, b.pending.activateAt);
+  for (const time of [epoch + 120000, epoch + 123456, epoch + 90 * 86400000]) {
+    const frames = [a, b, restarted].map(t => {
+      const p = playbackAt(t, time);
+      return frameAt(getSession(p), p.epoch, time);
+    });
+    assert.deepEqual(frames[0], frames[1]); assert.deepEqual(frames[0], frames[2]);
+  }
 });
 
 test('경계 직전 변경은 준비 여유를 확보하며 세션마다 별도 경계를 사용한다', () => {

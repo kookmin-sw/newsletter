@@ -19,6 +19,7 @@ interface Snapshot {
   lastError: string; lastChecked: string | null; preparing: boolean; source: string;
   assignment: Assignment | null; cacheDirectory: string; version: string;
   appUpdate: AppUpdate;
+  clock: { server: string; lastSync: string | null; uncertaintyMs: number | null; error: string; syncing: boolean };
 }
 declare global {
   interface Window {
@@ -137,13 +138,21 @@ function Setup({ state }: { state: Snapshot }) {
   };
   const missing = settings.assignments.filter((a) => !state.displays.some((d) => d.id === a.displayId));
   return <main className="setup">
-    <header><div className="app-brand"><img src={appIcon} alt="국민대학교" /><span className="eyebrow">KMUCS News Sinage</span></div><h1>모니터 설정</h1><p>세션 구성에 맞춰 목록 1대와 상세 1대 또는 2대를 배정하세요.</p></header>
+    <header><div className="app-brand"><img src={appIcon} alt="국민대학교" /><span className="eyebrow">KMUCS News Sinage</span></div><h1>모니터 설정</h1><p>한 PC에서 여러 화면을 쓰거나, 여러 PC에서 같은 세션의 목록·상세를 나누어 실행할 수 있습니다.</p></header>
     <div className="status"><span className={state.lastError ? 'status-dot warn' : 'status-dot'} />{state.preparing ? '새 콘텐츠를 준비하고 있습니다.' : state.lastError ? '기존 콘텐츠 유지 중' : '재생 준비 완료'}<small>앱 {state.version}</small></div>
     {state.lastError && <p className="alert" role="alert">{state.lastError}</p>}
+    <section className="quick-setup" aria-label="PC 간 시간 동기화">
+      <h2>PC 간 시간 동기화</h2>
+      <p>{state.clock.lastSync ? `공용 시각 보정 완료 · 측정 오차 추정 ±${state.clock.uncertaintyMs}ms` : 'PC 자체 시각 사용 중 · 다른 PC와의 동기화를 확인하세요.'}</p>
+      {state.clock.error && <p className="alert">{state.clock.error}. {state.clock.lastSync ? '마지막으로 보정한 시각으로 재생을 계속합니다.' : 'Windows 자동 시간 동기화를 확인하세요.'} 다음 주기에 다시 시도합니다.</p>}
+      <p className="hint">{state.clock.server} · 시작 시와 5분마다 보정{state.clock.lastSync && ` · 마지막 성공 ${new Date(state.clock.lastSync).toLocaleString('ko-KR')}`}. 화면의 실제 전환 오차는 네트워크와 장비에 따라 달라집니다.</p>
+      <p>여러 PC에서는 모두 같은 세션을 선택하고 이 PC가 맡을 화면 역할만 배정하세요. 콘텐츠 버전이 같은 PC끼리 같은 위치로 재생합니다.</p>
+      {Object.values(state.timelines).map(t => { const p = playbackAt(t, now()); return <p className="hint" key={p.sessionId}>{p.sessionId} · {getSession(p).title} · 콘텐츠 {p.manifest.revision.slice(0, 12)}{t.pending && now() < t.pending.activateAt ? ' · 새 콘텐츠 적용 대기' : ''}</p>; })}
+    </section>
     {!Object.keys(state.timelines).length && <p className="alert">아직 콘텐츠가 없습니다. alumni 사이트에 사이니지 데이터를 배포한 뒤 다시 확인하세요.</p>}
     {missing.length > 0 && <p className="alert">저장된 모니터 {missing.map((a) => a.displayId).join(', ')}가 연결되지 않았습니다. 다시 연결하거나 아래 버튼으로 연결 해제된 배정을 지우세요. <button onClick={() => setSettings((s) => ({ ...s, assignments: s.assignments.filter((a) => state.displays.some((d) => d.id === a.displayId)) }))}>연결 해제된 배정 지우기</button></p>}
     <section className="quick-setup" aria-label="빠른 모니터 배정">
-      <h2>모니터 한 번에 배정</h2><p>아래 모니터 순서대로 목록·상세를 묶습니다. 배정 후 각 카드에서 변경할 수 있습니다.</p>
+      <h2>모니터 한 번에 배정</h2><p>여러 모니터가 이 PC에 연결되어 있을 때 사용합니다. 모니터 한 대만 맡는 PC는 아래 카드에서 세션과 화면 역할을 선택하세요.</p>
       <div className="quick-fields"><label>사용할 모니터<select value={screenCount} onChange={e => setScreenCount(Number(e.target.value) as 2 | 3 | 4)}><option value={2}>2대 · 한 쌍</option><option value={3}>3대 · 목록 1 + 상세 2</option><option value={4}>4대 · 두 쌍</option></select></label>
         {Array.from({ length: pairCount }, (_, i) => <label key={i}>{i === 0 ? 'A' : 'B'} 세션<select value={pairIds[i]} onChange={e => setPairSessions(pairIds.map((id, index) => index === i ? e.target.value : id))}><option value="">세션 선택</option>{sessionIds.map(id => <option key={id} value={id}>{id} · {getSession(playbackAt(state.timelines[id], now())).title}</option>)}</select></label>)}
         <button type="button" disabled={state.displays.length < screenCount || pairIds.slice(0, pairCount).some(id => !id)} onClick={quickAssign}>빠른 배정</button>
