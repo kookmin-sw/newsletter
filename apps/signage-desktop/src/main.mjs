@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { initialTimelines, scheduleManifest, playbackAt, getSession, validateManifest } from '@kmucs/signage-player';
 import { atomicJson, readJson, fetchManifest, cacheAssets, assetName, digest, feedUrl, pruneAssets, validateAssignments, validateTimelines } from './storage.mjs';
 import { createAppUpdates } from './updates.mjs';
+import { showPreparedPairs as presentPreparedPairs } from './windows.mjs';
 
 const directory = dirname(fileURLToPath(import.meta.url));
 const development = !app.isPackaged && process.argv.includes('--dev');
@@ -116,12 +117,7 @@ function assignmentRows() {
 }
 
 function showPreparedPairs() {
-  let shown = false;
-  for (const record of players.values()) {
-    const pair = [...players.values()].filter((r) => r.assignment.sessionId === record.assignment.sessionId);
-    if (pair.every((r) => r.ready)) for (const r of pair) if (!r.window.isVisible()) { r.window.showInactive(); shown = true; }
-  }
-  if (shown && setupWindow?.isVisible()) setupWindow.moveTop();
+  presentPreparedPairs([...players.values()], setupWindow, process.platform === 'win32' && !demo ? displayList() : null);
 }
 
 function reconcileWindows() {
@@ -141,8 +137,6 @@ function reconcileWindows() {
     const existing = players.get(assignment.displayId);
     if (existing) { if (!demo) existing.window.setBounds(bounds); continue; }
     const window = secureWindow({ ...bounds, frame: demo, fullscreen: !demo, kiosk: !demo, resizable: demo, title: `KMUCS News Sinage · ${assignment.sessionId} ${assignment.role}` });
-    // Inactive fullscreen windows can otherwise stay below the Windows taskbar.
-    if (process.platform === 'win32' && !demo) window.setAlwaysOnTop(true, 'pop-up-menu');
     const record = { assignment, window, ready: false, failures: 0 };
     players.set(assignment.displayId, record);
     window.on('close', (event) => { if (!quitting) event.preventDefault(); });
