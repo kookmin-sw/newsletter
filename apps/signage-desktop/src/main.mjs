@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, protocol, screen, Menu, globalShortcut, powerSaveBlocker, powerMonitor, session } from 'electron';
 import { readFile, mkdir } from 'node:fs/promises';
+import { mkdirSync } from 'node:fs';
 import { dirname, resolve, join, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initialTimelines, scheduleManifest, playbackAt, getSession, validateManifest } from '@kmucs/signage-player';
@@ -8,7 +9,13 @@ import { atomicJson, readJson, fetchManifest, cacheAssets, assetName, digest, fe
 const directory = dirname(fileURLToPath(import.meta.url));
 const development = !app.isPackaged && process.argv.includes('--dev');
 const demo = development && process.argv.includes('--demo');
-app.setName(development ? 'KMUCS Signage Dev' : 'KMUCS Signage');
+app.setName(development ? 'KMUCS News Sinage Dev' : 'KMUCS News Sinage');
+// Keep the old profile directory when the visible product name changes.
+const profileDirectory = development && process.env.SIGNAGE_USER_DATA_DIR
+  ? resolve(process.env.SIGNAGE_USER_DATA_DIR)
+  : join(app.getPath('appData'), development ? 'KMUCS Signage Dev' : 'KMUCS Signage');
+mkdirSync(profileDirectory, { recursive: true });
+app.setPath('userData', profileDirectory);
 const source = feedUrl(process.env.SIGNAGE_FEED_URL ?? (development ? 'http://localhost:4321/signage/feed.json' : 'https://alumni.cs.kookmin.ac.kr/signage/feed.json'), development);
 const players = new Map();
 let setupWindow;
@@ -71,7 +78,7 @@ function report(error) {
 
 function secureWindow(options) {
   const window = new BrowserWindow({
-    backgroundColor: '#050505', show: false, autoHideMenuBar: true,
+    backgroundColor: '#050505', show: false, autoHideMenuBar: true, icon: join(directory, '../assets/icon.png'),
     ...options,
     webPreferences: { preload: join(directory, 'preload.cjs'), sandbox: true, contextIsolation: true, nodeIntegration: false, backgroundThrottling: false, devTools: development },
   });
@@ -87,7 +94,7 @@ function secureWindow(options) {
 
 function openSetup() {
   if (setupWindow && !setupWindow.isDestroyed()) { setupWindow.show(); setupWindow.focus(); return; }
-  setupWindow = secureWindow({ width: 1120, height: 780, title: 'KMUCS Signage 설정' });
+  setupWindow = secureWindow({ width: 1120, height: 780, title: 'KMUCS News Sinage 설정' });
   if (process.platform === 'win32' && !demo) setupWindow.setAlwaysOnTop(true, 'screen-saver');
   setupWindow.on('close', (event) => {
     if (!quitting && players.size) { event.preventDefault(); setupWindow.hide(); }
@@ -130,7 +137,7 @@ function reconcileWindows() {
     const bounds = demo ? { x: display.bounds.x + 20 + slot * (demoWidth + 20), y: display.bounds.y + 50, width: demoWidth, height: Math.round(demoWidth * 16 / 9) } : display.bounds;
     const existing = players.get(assignment.displayId);
     if (existing) { if (!demo) existing.window.setBounds(bounds); continue; }
-    const window = secureWindow({ ...bounds, frame: demo, fullscreen: !demo, kiosk: !demo, resizable: demo, title: `KMUCS ${assignment.sessionId} ${assignment.role}` });
+    const window = secureWindow({ ...bounds, frame: demo, fullscreen: !demo, kiosk: !demo, resizable: demo, title: `KMUCS News Sinage · ${assignment.sessionId} ${assignment.role}` });
     // Inactive fullscreen windows can otherwise stay below the Windows taskbar.
     if (process.platform === 'win32' && !demo) window.setAlwaysOnTop(true, 'pop-up-menu');
     const record = { assignment, window, ready: false, failures: 0 };
@@ -198,10 +205,6 @@ function trusted(event, admin = false) {
 
 async function start() {
   Menu.setApplicationMenu(null);
-  if (development && process.env.SIGNAGE_USER_DATA_DIR) {
-    await mkdir(process.env.SIGNAGE_USER_DATA_DIR, { recursive: true });
-    app.setPath('userData', process.env.SIGNAGE_USER_DATA_DIR);
-  }
   if (process.platform === 'win32') app.setAppUserModelId('kr.ac.kookmin.cs.signage');
   dataDirectory = app.getPath('userData');
   cacheDirectory = join(dataDirectory, 'assets');
@@ -232,6 +235,8 @@ async function start() {
     // Disconnected displays remain assigned so they can recover when plugged back in.
     validateAssignments(saved.assignments, saved.assignments.map((a) => ({ id: a.displayId })), [...new Set(saved.assignments.map((a) => a.sessionId))]);
     settings = saved;
+    // Refresh the executable path after installing a renamed product.
+    if (process.platform === 'win32' && app.isPackaged) app.setLoginItemSettings({ openAtLogin: settings.autoStart, path: process.execPath });
   } catch (e) { report(e); }
   try {
     const saved = await readJson(join(dataDirectory, 'playback.json'), null);

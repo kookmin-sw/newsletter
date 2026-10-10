@@ -21,6 +21,7 @@ const idleMinutes = option('--idle-minutes', 0);
 assert.ok(Number.isInteger(updates) && updates >= 2, '--updates: 2 이상의 정수 필요');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const data = await mkdtemp(join(tmpdir(), 'kmucs-memory-'));
+await writeFile(join(data, 'settings.json'), JSON.stringify({ assignments: [], autoStart: true }));
 const report = resolve(root, 'apps/signage-desktop/release/memory-check.jsonl');
 await mkdir(dirname(report), { recursive: true });
 await writeFile(report, '');
@@ -62,6 +63,11 @@ try {
   app.on('window', (page) => page.on('pageerror', (error) => errors.push(error.message)));
   const setup = await app.firstWindow();
   await setup.waitForSelector('.setup');
+  const identity = await app.evaluate(({ app }) => ({ name: app.getName(), profile: app.getPath('userData') }));
+  assert.equal(identity.name, 'KMUCS News Sinage Dev');
+  assert.equal(identity.profile, data);
+  assert.equal((await setup.evaluate(() => window.signage.snapshot())).settings.autoStart, true, '기존 설정을 읽어야 합니다.');
+  await setup.waitForFunction(() => document.querySelector('.app-brand img')?.naturalWidth === 512);
   let pages;
   for (let i = 0; i < 150; i++) { pages = app.windows().filter((p) => p.url().includes('player=1')); if (pages.length === 2) break; await sleep(100); }
   assert.equal(pages.length, 2);

@@ -5,6 +5,7 @@ import { assignMonitorPairs } from '@kmucs/signage-player/setup';
 import { Player, AssetCache, type ScreenRole } from '@kmucs/signage-player/react';
 import '@kmucs/signage-player/style.css';
 import './setup.css';
+import appIcon from '../assets/icon.png';
 
 interface Assignment { displayId: number; sessionId: string; role: ScreenRole }
 interface Settings { assignments: Assignment[]; autoStart: boolean }
@@ -58,7 +59,7 @@ function App() {
     const interval = setInterval(() => syncClock().catch((e) => setError(String(e))), 30000);
     return () => { unsubscribe(); clearInterval(interval); };
   }, []);
-  if (!state || !clockReady) return <div className="loading">{error || 'KMUCS 디스플레이를 준비하고 있습니다.'}</div>;
+  if (!state || !clockReady) return <div className="loading">{error || 'KMUCS News Sinage를 준비하고 있습니다.'}</div>;
   return state.assignment ? <PlaybackScreen state={state} /> : <Setup state={state} />;
 }
 
@@ -130,7 +131,7 @@ function Setup({ state }: { state: Snapshot }) {
   };
   const missing = settings.assignments.filter((a) => !state.displays.some((d) => d.id === a.displayId));
   return <main className="setup">
-    <header><span className="eyebrow">KMUCS · SIGNAGE</span><h1>모니터 설정</h1><p>세션 구성에 맞춰 목록 1대와 상세 1대 또는 2대를 배정하세요.</p></header>
+    <header><div className="app-brand"><img src={appIcon} alt="국민대학교" /><span className="eyebrow">KMUCS News Sinage</span></div><h1>모니터 설정</h1><p>세션 구성에 맞춰 목록 1대와 상세 1대 또는 2대를 배정하세요.</p></header>
     <div className="status"><span className={state.lastError ? 'status-dot warn' : 'status-dot'} />{state.preparing ? '새 콘텐츠를 준비하고 있습니다.' : state.lastError ? '기존 콘텐츠 유지 중' : '재생 준비 완료'}<small>앱 {state.version}</small></div>
     {state.lastError && <p className="alert" role="alert">{state.lastError}</p>}
     {!Object.keys(state.timelines).length && <p className="alert">아직 콘텐츠가 없습니다. alumni 사이트에 사이니지 데이터를 배포한 뒤 다시 확인하세요.</p>}

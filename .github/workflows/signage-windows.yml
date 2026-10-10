@@ -54,7 +54,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
           RELEASE_NOTES: |
-            Windows x64용 KMUCS Signage 설치 파일입니다. Assets에서 `.exe` 파일을 내려받아 설치하세요.
+            Windows x64용 KMUCS News Sinage 설치 파일입니다. Assets에서 `.exe` 파일을 내려받아 설치하세요.
 
             [설치 및 운영 안내](https://github.com/kookmin-sw/newsletter/blob/main/docs/signage/operations.md)
 
@@ -65,5 +65,5 @@ jobs:
           sha256sum -- *.exe > SHA256SUMS.txt
           printf '%s\n' "$RELEASE_NOTES" > RELEASE_NOTES.md
           gh release create "$RELEASE_TAG" --verify-tag \
-            --title "KMUCS Signage ${RELEASE_TAG#signage-v}" \
+            --title "KMUCS News Sinage ${RELEASE_TAG#signage-v}" \
             --notes-file RELEASE_NOTES.md ./*.exe SHA256SUMS.txt

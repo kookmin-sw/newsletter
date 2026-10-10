@@ -1,6 +1,6 @@
 {
   "name": "@kmucs/signage-desktop",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "type": "module",
   "main": "src/main.mjs",
@@ -30,7 +30,7 @@
   },
   "build": {
     "appId": "kr.ac.kookmin.cs.signage",
-    "productName": "KMUCS Signage",
+    "productName": "KMUCS News Sinage",
     "directories": {
       "output": "release"
     },
@@ -39,10 +39,12 @@
       "src/main.mjs",
       "src/preload.cjs",
       "src/storage.mjs",
+      "assets/icon.png",
       "package.json"
     ],
     "win": {
-      "artifactName": "KMUCS.Signage.Setup.${version}.${ext}",
+      "artifactName": "KMUCS.News.Sinage.Setup.${version}.${ext}",
+      "icon": "assets/icon.png",
       "target": [
         "nsis"
       ]
