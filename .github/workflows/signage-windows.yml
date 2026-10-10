@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - name: Verify release version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: node -e "require('node:assert/strict').equal(process.env.GITHUB_REF_NAME, 'signage-v' + require('./apps/signage-desktop/package.json').version)"
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:signage
       - run: pnpm check:signage
@@ -32,3 +35,35 @@ jobs:
           name: kmucs-signage-windows-x64
           path: apps/signage-desktop/release/*.exe
           if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/signage-v')
+    needs: windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: kmucs-signage-windows-x64
+          path: release
+      - name: Publish installer
+        working-directory: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_NOTES: |
+            Windows x64용 KMUCS Signage 설치 파일입니다. Assets에서 `.exe` 파일을 내려받아 설치하세요.
+
+            [설치 및 운영 안내](https://github.com/kookmin-sw/newsletter/blob/main/docs/signage/operations.md)
+
+            기사와 편성 변경은 alumni 사이트 배포 후 자동 반영됩니다. 앱 자체 업데이트는 앱을 종료하고 새 설치 파일로 설치하세요.
+
+            코드 서명이 없는 설치 파일로 Windows SmartScreen 확인이 표시될 수 있습니다. SHA256SUMS.txt로 다운로드 파일의 해시를 확인할 수 있습니다.
+        run: |
+          sha256sum -- *.exe > SHA256SUMS.txt
+          printf '%s\n' "$RELEASE_NOTES" > RELEASE_NOTES.md
+          gh release create "$RELEASE_TAG" --verify-tag \
+            --title "KMUCS Signage ${RELEASE_TAG#signage-v}" \
+            --notes-file RELEASE_NOTES.md ./*.exe SHA256SUMS.txt

@@ -4,7 +4,18 @@
 
 사이트를 먼저 배포해 `https://alumni.cs.kookmin.ac.kr/signage/feed.json`이 열리는지 확인한다. 새 앱의 첫 실행에는 이 주소에서 데이터를 받아야 한다. 네트워크를 끊은 첫 실행에는 표시할 콘텐츠가 없다.
 
-GitHub Actions의 **Build Windows Signage**를 수동 실행한다. 성공하면 `kmucs-signage-windows-x64` 아티팩트 안에 NSIS `.exe` 설치 파일이 생긴다. `signage-v*` 태그를 게시해도 빌드가 실행된다. GitHub Release를 자동 게시하지는 않는다.
+설치 파일은 [GitHub Releases](https://github.com/kookmin-sw/newsletter/releases)에서 받는다. 해당 버전의 **Assets**에서 `KMUCS Signage Setup <버전>.exe`를 내려받는다. `Source code` 파일은 설치 파일이 아니다. 공개 저장소이므로 다운로드에 GitHub 로그인이 필요하지 않다.
+
+새 버전을 게시하려면 `apps/signage-desktop/package.json`의 `version`을 올리고 변경 사항을 커밋해 `main`에 푸시한다. 그 커밋에 버전과 일치하는 태그를 만들어 푸시한다. 예를 들어 앱 버전이 `1.2.1`이라면 다음과 같다.
+
+```sh
+git tag signage-v1.2.1
+git push origin signage-v1.2.1
+```
+
+**Build Windows Signage**가 Windows에서 테스트·타입 검사·빌드 후 설치 파일과 `SHA256SUMS.txt`를 GitHub Release에 자동 게시한다. 태그와 앱 버전이 다르면 실패한다. 기존 릴리스 파일을 덮어쓰지 않으므로 수정본은 버전을 올려 새 태그로 배포한다. 앱 빌드에는 읽기 권한만 부여하고 릴리스 게시 작업에만 저장소 쓰기 권한을 부여한다.
+
+게시 없이 빌드만 시험하려면 GitHub Actions에서 **Build Windows Signage**를 `main` 브랜치로 수동 실행한다. 성공하면 `kmucs-signage-windows-x64` 아티팩트에서 설치 파일을 받을 수 있다. 설치 파일 배포는 GitHub Releases를 사용하며 Packages나 별도 배포 서버는 필요 없다.
 
 Windows 개발 PC에서 직접 만들려면 다음 명령을 사용한다.
 

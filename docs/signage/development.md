@@ -60,7 +60,7 @@ Electron 호스트는 시작 시 UTC 시각과 `performance.now()`를 연결한�
 
 ## 배포와 호환성
 
-기존 `deploy.yml`은 사이트 빌드와 사이니지 테스트 후 GitHub Pages에 배포한다. pnpm 버전은 루트 packageManager와 워크플로에서 10.33.3으로 맞춘다. Windows 설치 파일은 별도 `signage-windows.yml`에서 생성한다.
+기존 `deploy.yml`은 사이트 빌드와 사이니지 테스트 후 GitHub Pages에 배포한다. pnpm 버전은 루트 packageManager와 워크플로에서 10.33.3으로 맞춘다. Windows 설치 파일은 별도 `signage-windows.yml`에서 생성한다. 앱 버전과 일치하는 `signage-v*` 태그를 푸시하면 검증과 빌드 완료 후 GitHub Release에 설치 파일과 SHA-256 해시를 게시한다. electron-builder의 자체 게시는 끄고 릴리스 작업에서만 게시한다. `main` 수동 실행은 아티팩트만 생성한다. 자세한 절차는 [설치와 운영](./operations.md#설치-파일-만들기)을 참고한다.
 
 `schemaVersion`은 원격 데이터 형식의 호환성을 나타내고 `revision`은 콘텐츠 버전을 나타낸다. 새로운 필드가 필수가 되거나 기존 의미가 바뀌면 구버전 앱에서 읽을 수 있는지 먼저 검토한다. 호환되지 않으면 schemaVersion과 앱 버전을 올리고, 앱 설치를 먼저 완료한 뒤 데이터를 전환한다.
 

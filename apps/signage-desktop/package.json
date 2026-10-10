@@ -11,7 +11,7 @@
     "demo": "vite build && install-electron && electron . --dev --demo",
     "build": "vite build",
     "check": "tsc --noEmit && node --check src/main.mjs && node --check src/storage.mjs && node --check src/preload.cjs",
-    "dist:win": "electron-builder --win nsis --x64",
+    "dist:win": "electron-builder --win nsis --x64 --publish never",
     "test:memory": "node scripts/memory-check.mjs"
   },
   "dependencies": {
