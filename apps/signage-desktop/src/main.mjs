@@ -88,6 +88,7 @@ function secureWindow(options) {
 function openSetup() {
   if (setupWindow && !setupWindow.isDestroyed()) { setupWindow.show(); setupWindow.focus(); return; }
   setupWindow = secureWindow({ width: 1120, height: 780, title: 'KMUCS Signage 설정' });
+  if (process.platform === 'win32' && !demo) setupWindow.setAlwaysOnTop(true, 'screen-saver');
   setupWindow.on('close', (event) => {
     if (!quitting && players.size) { event.preventDefault(); setupWindow.hide(); }
   });
@@ -105,10 +106,12 @@ function assignmentRows() {
 }
 
 function showPreparedPairs() {
+  let shown = false;
   for (const record of players.values()) {
     const pair = [...players.values()].filter((r) => r.assignment.sessionId === record.assignment.sessionId);
-    if (pair.every((r) => r.ready)) for (const r of pair) if (!r.window.isVisible()) r.window.showInactive();
+    if (pair.every((r) => r.ready)) for (const r of pair) if (!r.window.isVisible()) { r.window.showInactive(); shown = true; }
   }
+  if (shown && setupWindow?.isVisible()) setupWindow.moveTop();
 }
 
 function reconcileWindows() {
@@ -128,6 +131,8 @@ function reconcileWindows() {
     const existing = players.get(assignment.displayId);
     if (existing) { if (!demo) existing.window.setBounds(bounds); continue; }
     const window = secureWindow({ ...bounds, frame: demo, fullscreen: !demo, kiosk: !demo, resizable: demo, title: `KMUCS ${assignment.sessionId} ${assignment.role}` });
+    // Inactive fullscreen windows can otherwise stay below the Windows taskbar.
+    if (process.platform === 'win32' && !demo) window.setAlwaysOnTop(true, 'pop-up-menu');
     const record = { assignment, window, ready: false, failures: 0 };
     players.set(assignment.displayId, record);
     window.on('close', (event) => { if (!quitting) event.preventDefault(); });

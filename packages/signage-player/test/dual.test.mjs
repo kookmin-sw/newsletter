@@ -34,7 +34,9 @@ test('1~100개에서 마지막 두 기사를 같은 목록 페이지에 표시�
       assert.ok(visible.length <= 6);
       assert.equal(new Set(visible).size, visible.length);
       assert.ok(frame.indices.every(index => visible.includes(index)));
-      assert.deepEqual(frame.indices, count === 1 ? [0] : i + 1 < count ? [i, i + 1] : [i - 1, i]);
+      assert.ok(frame.indices.includes(i));
+      assert.equal(frame.indices.length, count === 1 ? 1 : 2);
+      if (count > 1) assert.equal(frame.indices[1], frame.indices[0] + 1);
       offset += 20000;
     }
     assert.equal(offset, cycleMilliseconds(session));
@@ -42,20 +44,38 @@ test('1~100개에서 마지막 두 기사를 같은 목록 페이지에 표시�
   }
 });
 
-test('7개는 4+3 페이지로 나누고 마지막 6·7의 시간으로 재생한다', () => {
+test('7개는 5+2 페이지로 나누고 각 페이지 안에서 두 기사를 재생한다', () => {
   const session = dual(7).sessions[0];
   session.items[0].durationSeconds = 60;
   session.items[5].durationSeconds = 30;
   session.items[6].durationSeconds = 5;
-  assert.deepEqual(listPageIndices(session, 0), [0, 1, 2, 3]);
-  assert.deepEqual(listPageIndices(session, 4), [4, 5, 6]);
-  assert.deepEqual(listPageIndices(session, 6), [4, 5, 6]);
-  assert.equal(articleOffsetMilliseconds(session, 6), 110000);
-  assert.deepEqual(frameAt(session, 0, 110000).indices, [5, 6]);
-  assert.deepEqual(frameAt(session, 0, 139999).indices, [5, 6]);
-  assert.deepEqual(frameAt(session, 0, 140000).indices, [0, 1]);
-  assert.deepEqual(frameAt(session, 0, 140000).previousIndices, [5, 6]);
-  assert.equal(cycleMilliseconds(session), 140000);
+  assert.deepEqual(listPageIndices(session, 0), [0, 1, 2, 3, 4]);
+  assert.deepEqual(listPageIndices(session, 4), [0, 1, 2, 3, 4]);
+  assert.deepEqual(listPageIndices(session, 6), [5, 6]);
+  assert.deepEqual(frameAt(session, 0, 80000).indices, [3, 4]);
+  assert.equal(articleOffsetMilliseconds(session, 5), 100000);
+  assert.equal(articleOffsetMilliseconds(session, 6), 100000);
+  assert.deepEqual(frameAt(session, 0, 100000).indices, [5, 6]);
+  assert.deepEqual(frameAt(session, 0, 129999).indices, [5, 6]);
+  assert.deepEqual(frameAt(session, 0, 130000).indices, [0, 1]);
+  assert.deepEqual(frameAt(session, 0, 130000).previousIndices, [5, 6]);
+  assert.equal(cycleMilliseconds(session), 130000);
+});
+
+test('앞 페이지를 채우고 마지막 한 기사만 남으면 앞에서 하나를 옮긴다', () => {
+  for (const [count, expected] of [[7, [5, 2]], [8, [6, 2]], [9, [6, 3]], [12, [6, 6]], [13, [6, 5, 2]], [19, [6, 6, 5, 2]]]) {
+    for (const detailCount of [1, 2]) {
+      const session = dual(count).sessions[0]; session.detailCount = detailCount;
+      const pages = new Map();
+      for (let i = 0; i < count; i++) {
+        const page = listPageIndices(session, i);
+        pages.set(page[0], page);
+        const offset = articleOffsetMilliseconds(session, i);
+        assert.ok(frameAt(session, 0, offset).indices.includes(i), `기사 ${i + 1} 미리보기`);
+      }
+      assert.deepEqual([...pages.values()].map(page => page.length), expected);
+    }
+  }
 });
 
 test('1~100개 목록은 단일·이중 상세 모두 기사 누락이나 다른 페이지 중복이 없다', () => {

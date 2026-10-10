@@ -149,7 +149,8 @@ export function getSession(playback: Playback): DisplaySession {
 
 export function stepIndices(session: DisplaySession, index: number): number[] {
   if (session.detailCount !== 2 || session.items.length === 1) return [index];
-  return index + 1 < session.items.length ? [index, index + 1] : [index - 1, index];
+  const page = listPageIndices(session, index);
+  return index < page[page.length - 1] ? [index, index + 1] : [index - 1, index];
 }
 
 export function stepDurationSeconds(session: DisplaySession, index: number): number {
@@ -158,19 +159,21 @@ export function stepDurationSeconds(session: DisplaySession, index: number): num
 
 export function articleOffsetMilliseconds(session: DisplaySession, index: number): number {
   const stride = session.detailCount ?? 1;
-  const target = Math.floor(index / stride) * stride;
   let total = 0;
-  for (let i = 0; i < target; i += stride) total += stepDurationSeconds(session, i) * 1000;
-  return total;
+  for (let i = 0; i < session.items.length; i += stride) {
+    if (stepIndices(session, i).includes(index)) return total;
+    total += stepDurationSeconds(session, i) * 1000;
+  }
+  return fail('재생 목록에 없는 기사');
 }
 
 export function listPageIndices(session: DisplaySession, index: number): number[] {
   const count = session.items.length;
   let start = Math.floor(index / 6) * 6;
   let end = Math.min(start + 6, count);
-  // A final single article becomes a 4+3 split, keeping the final pair on one page.
+  // Move only one article to avoid a final page containing a single row.
   if (count > 6 && count % 6 === 1) {
-    const lastStart = count - 3;
+    const lastStart = count - 2;
     if (index >= lastStart) { start = lastStart; end = count; }
     else if (end > lastStart) end = lastStart;
   }
