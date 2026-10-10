@@ -30,7 +30,7 @@ async function download(url, limit, fetcher) {
   if (!response.ok || !response.body || Number(response.headers.get('content-length')) > limit) {
     await response.body?.cancel();
     if (!response.ok || !response.body) throw new Error(`수신 실패: HTTP ${response.status} (${url})`);
-    throw new Error('다운로드 용량 제한 초과');
+    throw new Error(`다운로드 용량 제한 초과 (${limit / 1024 / 1024}MiB): ${url}`);
   }
   const chunks = [];
   let length = 0;
@@ -40,7 +40,7 @@ async function download(url, limit, fetcher) {
       const { done, value } = await reader.read();
       if (done) break;
       length += value.byteLength;
-      if (length > limit) throw new Error('다운로드 용량 제한 초과');
+      if (length > limit) throw new Error(`다운로드 용량 제한 초과 (${limit / 1024 / 1024}MiB): ${url}`);
       chunks.push(value);
     }
   } finally { await reader.cancel(); }

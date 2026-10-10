@@ -4,7 +4,7 @@ import { issueLabel, frameAt, listPageIndices, getSession, playbackAt, type Time
 export type ScreenRole = 'list' | 'detail' | 'detail-secondary';
 export { AssetCache, type AssetUrl } from './assets.js';
 import { fontFamily, type AssetUrl } from './assets.js';
-import { transitionAt, reveal, selectorAt } from './motion.js';
+import { transitionAt, reveal, selectorAt, arrowOffsetAt } from './motion.js';
 
 export function Player({ timeline, role, now, assetUrl }: {
   timeline: Timeline; role: ScreenRole; now: () => number; assetUrl: AssetUrl;
@@ -41,6 +41,7 @@ export function Player({ timeline, role, now, assetUrl }: {
   const previous = session.items[previousIndex];
   const progress = reducedMotion || frame.first || session.items.length <= (session.detailCount ?? 1) ? 1 : frame.transition;
   const motion = transitionAt(progress);
+  const arrowOffset = reducedMotion || session.transitionMilliseconds === 0 ? 0 : arrowOffsetAt(time - playback.epoch);
   const pageIndices = listPageIndices(session, frame.index);
   const previousPageIndices = listPageIndices(session, frame.previousIndex);
   const page = Math.ceil(pageIndices[0] / 6);
@@ -64,23 +65,25 @@ export function Player({ timeline, role, now, assetUrl }: {
       {indices.map(articleIndex => {
         const item = session.items[articleIndex];
         const active = activeIndices.includes(articleIndex);
-        const focus = changedPage ? (active ? 1 : 0)
-          : (frame.indices.includes(articleIndex) ? motion.focus : 0) + (frame.previousIndices.includes(articleIndex) ? 1 - motion.focus : 0);
-        return <div className={`sg-card ${active ? 'sg-active' : ''}`} key={item.id} style={{ '--sg-focus': focus } as CSSProperties}>
+        const focusForSlot = (slot: number) => changedPage ? Number(activeIndices[slot] === articleIndex)
+          : Number(frame.indices[slot] === articleIndex) * motion.focus + Number(frame.previousIndices[slot] === articleIndex) * (1 - motion.focus);
+        const primaryFocus = focusForSlot(0);
+        const secondaryFocus = focusForSlot(1);
+        return <div className={`sg-card ${active ? 'sg-active' : ''}`} key={item.id} style={{ '--sg-focus': primaryFocus + secondaryFocus, '--sg-primary-focus': primaryFocus, '--sg-secondary-focus': secondaryFocus } as CSSProperties}>
 
           <div className="sg-card-body"><div className="sg-meta"><span className="sg-number">{String(articleIndex + 1).padStart(2, '0')}</span><span className="sg-badge">{item.category}</span><span>{item.author}</span></div>
           <div><h2 data-fit="목록 제목">{item.title}</h2><p data-fit="목록 소개">{item.excerpt}</p></div>
           <Tags article={item} /></div>
         </div>;
       })}
-      {selectors.map((selector, slot) => <div key={slot} className={`sg-selector ${slot === 1 ? 'sg-selector-secondary' : ''}`} aria-hidden="true" style={{ transform: `translate3d(0, calc(${selector.position} * (100% + 14px)), 0)`, opacity: selector.opacity }}><span />{session.detailCount === 2 && <b>{slot + 1}</b>}</div>)}
+      {selectors.map((selector, slot) => <div key={slot} className={`sg-selector ${slot === 1 ? 'sg-selector-secondary' : ''}`} aria-hidden="true" style={{ transform: `translate3d(0, calc(${selector.position} * (100% + 14px)), 0)`, opacity: selector.opacity }}><span style={{ transform: `translate3d(${arrowOffset}px, -50%, 0) rotate(45deg)` }} />{session.detailCount === 2 && <b>{slot + 1}</b>}</div>)}
     </div>;
   };
   const detail = (item: DisplayArticle, index: number, outgoing = false) => {
     const text = (incoming: number, distance = 18) => fade(outgoing ? motion.outgoing : incoming, outgoing ? -10 : distance);
     const imageProgress = outgoing ? 1 : motion.image;
     return <article key={item.id} className="sg-detail" aria-hidden={outgoing || undefined}>
-      <div className="sg-meta" style={text(motion.heading, 10)}><span className="sg-number">{String(index + 1).padStart(2, '0')}</span><span className="sg-badge">{item.category}</span><span>{item.author}</span></div>
+      <div className="sg-meta" style={text(motion.heading, 10)}><span className="sg-number">{String(index + 1).padStart(2, '0')}</span><span className="sg-badge">{item.category}</span><span>{item.author}</span>{session.detailCount === 2 && <span className={`sg-detail-slot ${role === 'detail-secondary' ? 'secondary' : ''}`}>상세 {role === 'detail-secondary' ? '2' : '1'}</span>}</div>
       <h1 data-fit="상세 제목" style={text(motion.heading, 24)}>{item.title}</h1>
       <div className="sg-hero" style={{ opacity: imageProgress }}><div className="sg-hero-media" style={{ transform: `scale(${outgoing ? 1 + 0.015 * motion.image : 1 + 0.035 * (1 - motion.image)})` }}>
         {item.image ? <img src={assetUrl(item.image, manifest)} alt="기사 대표 이미지" /> : <div className="sg-no-image">KMUCS<br /><span>NEWS LETTER</span></div>}
@@ -90,11 +93,11 @@ export function Player({ timeline, role, now, assetUrl }: {
     </article>;
   };
   return <div className="sg-viewport" ref={viewport}>
-    <div className="sg-stage" data-session={session.id} data-article={article.id} data-articles={frame.indices.map(i => session.items[i].id).join(",")} data-role={role} data-revision={manifest.revision} style={{ transform: `translate(-50%, -50%) scale(${scale})`, fontFamily: `"${fontFamily(manifest)}", "Malgun Gothic", sans-serif` }}>
-      <header className="sg-header">
+    <div className={`sg-stage${role === 'list' ? '' : ' sg-stage-detail'}`} data-session={session.id} data-article={article.id} data-articles={frame.indices.map(i => session.items[i].id).join(",")} data-role={role} data-revision={manifest.revision} style={{ transform: `translate(-50%, -50%) scale(${scale})`, fontFamily: `"${fontFamily(manifest)}", "Malgun Gothic", sans-serif` }}>
+      {role === 'list' && <header className="sg-header">
         <div className="sg-masthead"><img src={assetUrl(manifest.branding.logo, manifest)} alt="국민대학교 소프트웨어융합대학 SW중심대학사업단" /><div><span>{session.dateLabel}</span><strong>{issueLabel(session.issue)}</strong></div></div>
-        <div className="sg-heading">NEWS LETTER</div><p>{session.title}{session.detailCount === 2 && role !== 'list' && <span className={`sg-detail-slot ${role === 'detail-secondary' ? 'secondary' : ''}`}>상세 {role === 'detail-secondary' ? '2' : '1'}</span>}</p>
-      </header>
+        <div className="sg-heading">NEWS LETTER</div><p>{session.title}</p>
+      </header>}
       <main className="sg-content">
         {frame.waiting ? <div className="sg-waiting">곧 뉴스 재생이 시작됩니다.</div> : role === 'list' ? <>
           {changedPage && progress < 1 && list(previousPageIndices, true)}
@@ -117,7 +120,7 @@ function Tags({ article }: { article: DisplayArticle }) {
 function Summary({ paragraphs, paragraphStyle }: { paragraphs: string[]; paragraphStyle: (index: number) => CSSProperties }) {
   const element = useRef<HTMLDivElement>(null);
   const length = paragraphs.join('').length;
-  const maximum = length <= 140 ? 36 : length <= 210 ? 33 : 30;
+  const maximum = length <= 140 ? 40 : length <= 210 ? 38 : 36;
   useLayoutEffect(() => {
     const node = element.current!;
     // Measure only when the article changes, never on each animation frame.

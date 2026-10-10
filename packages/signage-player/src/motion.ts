@@ -23,3 +23,7 @@ export function selectorAt(previous: number, current: number, progress: number, 
     ? { position: previous, opacity: motion.outgoing }
     : { position: current, opacity: reveal(progress, 0.5, 1) };
 }
+
+export function arrowOffsetAt(elapsedMilliseconds: number) {
+  return 5 * Math.sin((elapsedMilliseconds % 3200) / 3200 * Math.PI * 2);
+}

@@ -1,6 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { transitionAt, reveal, selectorAt } from '../dist/motion.js';
+import { transitionAt, reveal, selectorAt, arrowOffsetAt } from '../dist/motion.js';
+
+test('화살표는 공유 시각에 따라 3.2초마다 좌우 5px 안에서 반복한다', () => {
+  assert.equal(arrowOffsetAt(0), 0);
+  assert.equal(arrowOffsetAt(800), 5);
+  assert.equal(arrowOffsetAt(2400), -5);
+  for (const time of [-1, 0, 400, 799, 1600, 3199, 3200, 90 * 24 * 60 * 60 * 1000]) {
+    assert.ok(Math.abs(arrowOffsetAt(time)) <= 5);
+    assert.ok(Math.abs(arrowOffsetAt(time) - arrowOffsetAt(time + 3200)) < 1e-10);
+  }
+  assert.ok(Math.abs(arrowOffsetAt(3199) - arrowOffsetAt(3201)) < 0.02);
+});
 
 test('제목은 이전 글자가 사라진 뒤 나타나고 모든 단계는 시간에서 결정된다', () => {
   for (let ms = 0; ms <= 950; ms++) {

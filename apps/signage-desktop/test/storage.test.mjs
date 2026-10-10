@@ -77,6 +77,17 @@ test('거절한 응답은 헤더 검사 단계에서도 스트림을 취소한�
   }
 });
 
+test('용량 초과 오류에 실패 파일과 제한을 표시하고 불완전한 자산은 저장하지 않는다', async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), 'kmucs-limit-')); t.after(() => rm(directory, { recursive: true, force: true }));
+  const manifest = fixture(); manifest.assets = [{ path: '/images/large.png', sha256: digest('large') }];
+  for (const header of [true, false]) {
+    const response = header ? new Response('large', { headers: { 'content-length': String(26 * 1024 * 1024) } })
+      : new Response(new Uint8Array(25 * 1024 * 1024 + 1));
+    await assert.rejects(cacheAssets(manifest, 'https://example.com/feed.json', directory, async () => response), /25MiB.*\/images\/large\.png/);
+    assert.deepEqual(await readdir(directory), []);
+  }
+});
+
 test('3대 세션은 목록·상세 1·상세 2 배정을 요구하고 2대 설정과 혼동하지 않는다', () => {
   const displays = [1, 2, 3].map(id => ({ id }));
   const assignments = ['list', 'detail', 'detail-secondary'].map((role, i) => ({ displayId: i + 1, sessionId: 'a', role }));
