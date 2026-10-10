@@ -279,3 +279,8 @@ pnpm --filter @kmucs/signage-desktop test:memory --updates 20 --idle-minutes 288
 - 목록·상세 화면의 굵은 기사 제목도 공식 Pretendard 1.3.9 Bold로 통일했다. 본문은 Regular, 상단 영문 표제와 숫자는 Arial을 유지한다. 기존 피드 갱신으로 반영되므로 앱 재설치나 재시작이 필요 없다.
 - Bold 파일의 SHA-256은 `4609c3356e536fafe38f4add0daeceb3d8595d3057bce13c428c33ddbd43d362`이다. 기존 SIL OFL 라이선스와 폰트 캐시 경로를 사용하며 앱 코드·데이터 스키마는 변경하지 않았다.
 - 사이트 빌드와 생성 피드의 폰트 경로·파일 해시 검사가 통과했다. 브라우저에서 현재 7개 기사의 목록 제목(27px), 상세 제목(49px), 요약(25~27px)이 모두 영역 안에 표시되는 것을 확인했다. 실제 Windows 모니터의 시각적 확인은 포함하지 않았다.
+
+## 2026-10-10: 2호 전체 기사로 원격 갱신 테스트
+
+- `lobby-a`의 뉴스레터를 2호로 전환했다. HTML에 등록된 5개 기사를 원래 순서와 요약 그대로 편성하며, 기사당 20초·전환 950ms·확인 주기 60초·세션 ID와 기준 시각을 유지한다.
+- 테스트 후 3호로 복구하려면 `src/content/config/signage.json`의 `newsletterId`, `title`, `issue`, `dateLabel`을 각각 `newsletter-003`, `KMUCS 3호 뉴스레터`, `003`, `2026.10`으로 되돌리고 사이트를 배포한다. 앱 재설치나 모니터 재배정은 필요 없다.
