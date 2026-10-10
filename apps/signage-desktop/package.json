@@ -42,6 +42,7 @@
       "package.json"
     ],
     "win": {
+      "artifactName": "KMUCS.Signage.Setup.${version}.${ext}",
       "target": [
         "nsis"
       ]

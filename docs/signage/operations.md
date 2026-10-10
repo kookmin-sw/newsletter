@@ -4,7 +4,7 @@
 
 사이트를 먼저 배포해 `https://alumni.cs.kookmin.ac.kr/signage/feed.json`이 열리는지 확인한다. 새 앱의 첫 실행에는 이 주소에서 데이터를 받아야 한다. 네트워크를 끊은 첫 실행에는 표시할 콘텐츠가 없다.
 
-설치 파일은 [GitHub Releases](https://github.com/kookmin-sw/newsletter/releases)에서 받는다. 해당 버전의 **Assets**에서 `KMUCS Signage Setup <버전>.exe`를 내려받는다. `Source code` 파일은 설치 파일이 아니다. 공개 저장소이므로 다운로드에 GitHub 로그인이 필요하지 않다.
+설치 파일은 [GitHub Releases](https://github.com/kookmin-sw/newsletter/releases)에서 받는다. 해당 버전의 **Assets**에서 `KMUCS.Signage.Setup.<버전>.exe`를 내려받는다. `Source code` 파일은 설치 파일이 아니다. 공개 저장소이므로 다운로드에 GitHub 로그인이 필요하지 않다.
 
 새 버전을 게시하려면 `apps/signage-desktop/package.json`의 `version`을 올리고 변경 사항을 커밋해 `main`에 푸시한다. 그 커밋에 버전과 일치하는 태그를 만들어 푸시한다. 예를 들어 앱 버전이 `1.2.1`이라면 다음과 같다.
 
