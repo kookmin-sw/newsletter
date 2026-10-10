@@ -61,7 +61,9 @@ async function buildManifest(): Promise<Manifest> {
   }));
   const assets = await Promise.all([...paths].sort().map(async (path) => {
     if (!/^\/(images|fonts)\/[a-zA-Z0-9_./-]+$/.test(path) || path.includes('..')) throw new Error(`사이니지: 로컬 이미지 경로만 허용: ${path}`);
-    return { path, sha256: hash(await readFile(resolve('public', path.slice(1)))) };
+    const bytes = await readFile(resolve('public', path.slice(1)));
+    if (bytes.length > 25 * 1024 * 1024) throw new Error(`사이니지: 이미지 또는 폰트가 앱의 25MiB 제한을 초과합니다: ${path}`);
+    return { path, sha256: hash(bytes) };
   }));
   const payload = { schemaVersion: settings.schemaVersion, pollIntervalSeconds: settings.pollIntervalSeconds, branding, assets, sessions };
   return validateManifest({ ...payload, revision: hash(JSON.stringify(payload)) });
