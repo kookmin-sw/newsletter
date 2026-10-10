@@ -256,4 +256,5 @@ pnpm --filter @kmucs/signage-desktop test:memory --updates 20 --idle-minutes 288
 - 릴리스에는 `.exe`, `.exe.blockmap`, `latest.yml`, `SHA256SUMS.txt`를 함께 게시한다. 저장소의 최신 정식 릴리스에 업데이트 목록이 있어야 한다. 빌드의 GitHub 게시 설정이 설치 앱의 `app-update.yml`을 생성하며, 실제 게시는 기존 CI 릴리스 작업이 담당한다.
 - 테스트 46개, 웹·공유 플레이어·앱 타입 검사, 사이트·앱 빌드 통과. 업데이트 테스트는 수동 설치, 중복 요청, 네트워크 오류와 재시도, 검증 실패 시 설치 금지, 1,000회 확인 후 리스너 수 유지를 검사한다.
 - macOS Electron에서 개발 모드의 업데이트 비활성화와 IPC 거절을 확인하고 콘텐츠 갱신 4회, 41.9초 회귀 검사에 통과했다. 워밍업 후 목록·상세 JS 힙은 3.57 / 3.59MiB에서 3.58 / 3.60MiB로 변했고 DOM 104 / 81개, 리스너 173 / 175개, 창 3개와 캐시 11개가 유지됐다. 이 검사는 실제 Windows 업데이트 실행이나 장기 무누수 검증을 대신하지 않는다.
+- Windows CI [38044999893](https://github.com/kookmin-sw/newsletter/actions/runs/38044999893)에서 검증·패키징·게시가 완료됐다. 공개 1.3.0 설치 파일(112,679,750바이트)과 업데이트 파일들의 SHA-256 및 `latest.yml`의 SHA-512·크기 일치를 확인했다. 실제 `electron-updater`를 macOS Electron에서 Windows 채널로 실행해 1.2.3 기준 새 버전 발견, 전체 설치 파일 다운로드·검증, `ready` 상태까지 확인했다. 설치 파일 실행과 Windows 차등 다운로드는 이 검사에 포함하지 않았다.
 - 실제 Windows 설치·업데이트 재시작·SmartScreen 동작과 수개월 연속 실행은 현장 검증이 필요하다. 자동 업데이트로 Windows 보안 경고를 없앤다고 보장하지 않는다.
