@@ -1,12 +1,20 @@
 ---
 title: "KMUCS 3호 뉴스레터"
 subtitle: "2026.10 · Vol. 003"
-excerpt: "AI 역량평가, 동문 패널톡, 2026 CAREER WEEK, 알고리즘 대회, 자율주행 경진대회와 하계 현장실습 소식을 전합니다."
+excerpt: "AI 역량평가, 동문 패널톡, 2026 CAREER WEEK, 알고리즘 대회, 자율주행 경진대회, 하계 현장실습과 iCar 팀 인터뷰 소식을 전합니다."
 publishedAt: "2026-10-10"
 author: "SW중심대학 기자단 '새움'"
 coverImage: "/images/news/newsletter-003-cover.svg"
 tags: ["뉴스레터", "Vol.003"]
 format: "html"
+articleIds:
+  - 2026-ai-competency-interview
+  - 2026-alumni-panel-talk
+  - 2026-career-week
+  - 2026-algorithm-contest
+  - 2026-autonomous-driving-contest
+  - 2026-summer-internship
+  - 2026-icar-interview
 ---
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#050505">
@@ -148,6 +156,26 @@ format: "html"
               <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="left" valign="top"><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#현장실습</span><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#산학협력</span><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#실무경험</span></td>
+                  <td align="right" valign="top" style="white-space: nowrap; padding-left: 12px;"><span style="display: inline-block; border: 1px solid #fff; color: #fff; padding: 8px 16px; font-size: 15px; border-radius: 4px;">관련기사 보기</span></td>
+                </tr>
+              </table>
+            </div></a>
+          </td>
+        </tr>
+        <tr><td height="25"></td></tr>
+        <tr>
+          <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
+            <a href="/articles/2026-icar-interview" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-icar-race.webp" alt="“학교의 지원이 있었기에” · iCar 팀 인터뷰" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <div style="padding: 25px;">
+              <div style="margin-bottom: 12px;">
+                <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
+                <span style="background-color: #333; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block;">류진 기자</span>
+              </div>
+              <h2 style="margin: 0 0 15px 0; font-size: 24px; line-height: 1.4; color: #ffffff;">“학교의 지원이 있었기에” · iCar 팀 인터뷰</h2>
+              <p style="margin: 0 0 25px 0; font-size: 16px; color: #aaaaaa; line-height: 1.6;">자율주행 경진대회 주행 미션에서 전국 2위에 오른 iCar 팀의 윤여민 학생(소프트웨어학부 4학년)을 서면으로 인터뷰했다. iCar는 ‘지능형 자동차’를 뜻하는 이름으로, 21학번 동기인 윤여민·박윤재·오정규 학생이 이번 대회를 계기로 한 팀이 됐다.<br><br>팀이 가장 공을 들인 부분은 제어다. 딥러닝은 신호등 인식에만 쓰고, 스탠리 컨트롤러 대신 앞으로의 주행을 미리 시뮬레이션하는 MPPI 컨트롤러를 택했다. 임베디드 환경에서 성능을 끌어내려고 전체 코드를 Rust로 작성했고, 차선 인식과 MPPI에는 직접 만든 CUDA 커널을 적용했다. MPPI는 차량에서 실시간으로 돌리기 위해 CPU, Vulkan, CUDA 순으로 세 차례 다시 구현했다.<br><br>본선 1차 경주 기록은 129.6초였고, 2차에는 더 공격적인 제어 파라미터를 투입했지만 주행에 실패해 기권했다. 스튜디오가 평일에만 열려 대회 기간 연습은 다섯 차례에 그쳤지만, 시뮬레이터로 코드를 개선하며 부족한 시간을 메웠다. 재학 중에는 컴퓨터비전과 강화학습 수업이 차선 인식과 제어 알고리즘을 이해하는 데 도움이 됐다고 꼽았다.</p>
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="left" valign="top"><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#자율주행</span><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#iCar</span><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#인터뷰</span><span style="display: inline-block; white-space: nowrap; border: 1px solid #555; color: #aaa; font-size: 14px; padding: 5px 10px; border-radius: 4px; margin-right: 6px; margin-bottom: 6px;">#MPPI</span></td>
                   <td align="right" valign="top" style="white-space: nowrap; padding-left: 12px;"><span style="display: inline-block; border: 1px solid #fff; color: #fff; padding: 8px 16px; font-size: 15px; border-radius: 4px;">관련기사 보기</span></td>
                 </tr>
               </table>
