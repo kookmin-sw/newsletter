@@ -84,10 +84,10 @@ export function Player({ timeline, role, now, assetUrl }: {
     const imageProgress = outgoing ? 1 : motion.image;
     return <article key={item.id} className="sg-detail" aria-hidden={outgoing || undefined}>
       <div className="sg-meta" style={text(motion.heading, 10)}><span className="sg-number">{String(index + 1).padStart(2, '0')}</span><span className="sg-badge">{item.category}</span><span>{item.author}</span>{session.detailCount === 2 && <span className={`sg-detail-slot ${role === 'detail-secondary' ? 'secondary' : ''}`}>상세 {role === 'detail-secondary' ? '2' : '1'}</span>}</div>
-      <h1 data-fit="상세 제목" style={text(motion.heading, 24)}>{item.title}</h1>
       <div className="sg-hero" style={{ opacity: imageProgress }}><div className="sg-hero-media" style={{ transform: `scale(${outgoing ? 1 + 0.015 * motion.image : 1 + 0.035 * (1 - motion.image)})` }}>
         {item.image ? <img src={assetUrl(item.image, manifest)} alt="기사 대표 이미지" /> : <div className="sg-no-image">KMUCS<br /><span>NEWS LETTER</span></div>}
       </div></div>
+      <h1 data-fit="상세 제목" style={text(motion.heading, 24)}>{item.title}</h1>
       <Summary paragraphs={item.summary} paragraphStyle={i => text(reveal(progress, 0.38 + i * 0.06, 0.82 + i * 0.06), 16)} />
       <div className="sg-read" style={text(motion.footer, 0)}><Tags article={item} /><img src={item.qr} alt="기사 원문 QR 코드" /></div>
     </article>;
