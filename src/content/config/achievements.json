@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2026-04-04",
+    "category": "etc",
+    "title": "AI_TOP_100 CAMPUS",
+    "award": "Finalist 선정",
+    "name": "윤민우",
+    "cohort": "22",
+    "host": "카카오임팩트 · 브라이언임팩트",
+    "link": ""
+  },
+  {
+    "date": "2023-12-20",
+    "category": "paper",
+    "title": "한국소프트웨어종합학술대회(KSC 2023)",
+    "award": "최우수논문상 (오픈소스 소프트웨어 분야)",
+    "name": "윤민우",
+    "cohort": "22",
+    "host": "한국정보과학회",
+    "link": ""
+  },
+  {
+    "date": "2023-12-07",
+    "category": "award",
+    "title": "공개SW 개발자 대회",
+    "award": "학생부문 은상",
+    "name": "윤민우",
+    "cohort": "22",
+    "host": "과학기술정보통신부",
+    "link": ""
+  },
+  {
+    "date": "2022-12-09",
+    "category": "award",
+    "title": "임베디드 소프트웨어 경진대회",
+    "award": "일반부문 대상",
+    "name": "윤민우",
+    "cohort": "22",
+    "host": "산업통상자원부",
+    "link": ""
+  }
+]

@@ -34,6 +34,7 @@
     { "label": "소식", "href": "/articles" },
     { "label": "뉴스", "href": "/news" },
     { "label": "프로그램", "href": "/programs" },
+    { "label": "성과", "href": "/achievements" },
     { "label": "문의", "href": "/contact" }
   ]
 }
