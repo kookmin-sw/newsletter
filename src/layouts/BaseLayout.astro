@@ -6,6 +6,7 @@ import { Header } from '@/components/organisms/Header';
 import { Footer } from '@/components/organisms/Footer';
 import { url, asset } from '@/lib/path';
 import siteConfig from '@/content/config/site.json';
+import { isIndexablePath, pagePath } from '@/lib/seo.mjs';
 
 interface Props {
   title?: string;
@@ -28,7 +29,7 @@ const pageTitle = title
 const ogImageUrl = ogImage.startsWith('http')
   ? ogImage
   : new URL(asset(ogImage), siteConfig.siteUrl).toString();
-const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
+const canonicalUrl = new URL(pagePath(Astro.url.pathname), siteConfig.siteUrl).toString();
 ---
 
 <!doctype html>
@@ -37,6 +38,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
+  {!isIndexablePath(Astro.url.pathname) && <meta name="robots" content="noindex, follow" />}
   <meta name="generator" content={Astro.generator} />
   <link rel="canonical" href={canonicalUrl} />
 

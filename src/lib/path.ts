@@ -1,3 +1,5 @@
+import { pagePath } from './seo.mjs';
+
 /**
  * base path 헬퍼
  *
@@ -10,8 +12,7 @@ export const BASE = '';
 
 /** 내부 페이지 경로에 base prefix 추가 */
 export function url(path: string): string {
-  if (!BASE) return path;
-  return `${BASE}${path}`;
+  return `${BASE}${pagePath(path)}`;
 }
 
 /** public 에셋(이미지, 폰트 등) 경로에 base prefix 추가 */

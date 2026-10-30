@@ -38,6 +38,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Verify search metadata
+        run: pnpm test:seo
+
       - name: Verify signage
         run: pnpm test:signage && pnpm check:signage
 
