@@ -55,7 +55,7 @@ export function ArticleCard({
 }: ArticleCardProps) {
   return (
     <article className={`${card}${className ? ` ${className}` : ''}`}>
-      <a href={href} className={cardLink}>
+      <a href={href} className={cardLink} data-analytics-content="card">
         {coverImage ? (
           <img src={asset(coverImage)} alt={title} className={cardImage} width="640" height="400" loading="lazy" decoding="async" />
         ) : (

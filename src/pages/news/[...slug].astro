@@ -22,6 +22,7 @@ const isHtmlNewsletter = item.data.format === 'html';
   <BaseLayout title={item.data.title} description={item.data.excerpt} ogImage={item.data.ogImage ?? item.data.coverImage} currentPath="/news">
     <div class="html-newsletter">
       <Content />
+      <span data-analytics-content-end aria-hidden="true" style="display:block;height:1px;"></span>
     </div>
   </BaseLayout>
 ) : (

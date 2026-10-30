@@ -17,7 +17,7 @@
     "signage:demo": "pnpm --filter @kmucs/signage-player build && pnpm --filter @kmucs/signage-desktop demo",
     "signage:build": "pnpm --filter @kmucs/signage-player build && pnpm --filter @kmucs/signage-desktop build",
     "signage:dist": "pnpm signage:build && pnpm --filter @kmucs/signage-desktop dist:win",
-    "test:seo": "node --test src/lib/analytics.test.mjs src/lib/seo.test.mjs src/lib/image-loading.test.mjs src/lib/rehype-images.test.mjs src/lib/newsletter-html.test.mjs && node scripts/check-seo.mjs",
+    "test:seo": "node --test src/lib/analytics.test.mjs src/lib/analytics-events.test.mjs src/lib/analytics-links.test.mjs src/lib/seo.test.mjs src/lib/image-loading.test.mjs src/lib/rehype-images.test.mjs src/lib/newsletter-html.test.mjs && node scripts/check-seo.mjs",
     "check:web": "astro sync && tsc --noEmit"
   },
   "dependencies": {

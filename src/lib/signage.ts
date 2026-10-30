@@ -6,6 +6,7 @@ import QRCode from 'qrcode';
 import { validateManifest, type Manifest } from '@kmucs/signage-player';
 import config from '@/content/config/signage.json';
 import site from '@/content/config/site.json';
+import { signageUrl } from './analytics-links.mjs';
 import { newsletterSummaries } from './newsletter-summaries.mjs';
 
 const settingsSchema = z.object({
@@ -39,7 +40,7 @@ async function buildManifest(): Promise<Manifest> {
   const sources = summarySources(news);
   const branding = {
     siteUrl: site.siteUrl, logo: '/images/newsletter-logo.png',
-    fontRegular: '/fonts/Pretendard-Regular.woff2', fontBold: '/fonts/Pretendard-Bold.woff2', qr: await qr(site.siteUrl),
+    fontRegular: '/fonts/Pretendard-Regular.woff2', fontBold: '/fonts/Pretendard-Bold.woff2', qr: await qr(signageUrl(site.siteUrl)),
   };
   const paths = new Set([branding.logo, branding.fontRegular, branding.fontBold]);
   const sessions = await Promise.all(settings.sessions.map(async (s) => {
@@ -55,7 +56,7 @@ async function buildManifest(): Promise<Manifest> {
     if (!selected.length) throw new Error(`사이니지: ${s.id}에 뉴스레터 요약이 있는 기사가 없습니다. 뉴스레터에 요약을 추가하세요.`);
     const items = await Promise.all(selected.map(async ({ ref, article, summary }) => {
       if (article.data.coverImage) paths.add(article.data.coverImage);
-      return displayArticle(article, ref.durationSeconds ?? s.defaultDurationSeconds, summary);
+      return displayArticle(article, ref.durationSeconds ?? s.defaultDurationSeconds, summary, newsletter.id);
     }));
     return { id: s.id, title: s.title, issue: s.issue, dateLabel: s.dateLabel, startsAt: s.startsAt, transitionMilliseconds: s.transitionMilliseconds, detailCount: s.detailCount, items };
   }));
@@ -80,7 +81,7 @@ function summarySources(news: CollectionEntry<'news'>[]) {
   return { byNewsletter, latest };
 }
 
-async function displayArticle(article: CollectionEntry<'articles'>, durationSeconds: number, newsletterSummary: string[]) {
+async function displayArticle(article: CollectionEntry<'articles'>, durationSeconds: number, newsletterSummary: string[], newsletterId?: string) {
   const data = article.data;
   const excerpt = data.displayExcerpt ?? data.excerpt ?? data.subtitle ?? '';
   const articleUrl = new URL(`/articles/${article.id}/`, site.siteUrl).href;
@@ -88,7 +89,7 @@ async function displayArticle(article: CollectionEntry<'articles'>, durationSeco
   return {
     id: article.id, title: data.title, excerpt, summary: newsletterSummary,
     author: data.author, category: categories[data.category ?? 'news'], tags: data.tags.slice(0, 3),
-    ...(data.coverImage ? { image: data.coverImage } : {}), url: articleUrl, qr: await qr(articleUrl), durationSeconds,
+    ...(data.coverImage ? { image: data.coverImage } : {}), url: articleUrl, qr: await qr(signageUrl(articleUrl, newsletterId)), durationSeconds,
   };
 }
 

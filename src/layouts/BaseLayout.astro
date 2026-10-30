@@ -183,6 +183,8 @@ const canonicalUrl = new URL(pagePath(Astro.url.pathname), siteConfig.siteUrl).t
   </div>
   <script>
     import { initImageLoading } from '@/lib/image-loading';
+    import { initAnalyticsEvents } from '@/lib/analytics-events';
+    initAnalyticsEvents();
     initImageLoading();
     document.addEventListener('astro:page-load', initImageLoading);
     // View Transitions: swap 전에 현재 페이지의 CSS를 새 문서에 복사

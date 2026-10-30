@@ -90,7 +90,7 @@ export function Hero({ label, title, subtitle, primaryAction, secondaryAction, s
             onFocus={() => setInteracting(true)}
             onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
             {slide.title && (slide.href
-              ? <a className={styles.carouselCaption} href={slide.href}>{slide.title}<span aria-hidden="true">↗</span></a>
+              ? <a className={styles.carouselCaption} href={slide.href} data-analytics-content="hero">{slide.title}<span aria-hidden="true">↗</span></a>
               : <span className={styles.carouselCaption}>{slide.title}</span>)}
             {slides.length > 1 && <div className={styles.carouselControls}>
               <button type="button" className={styles.carouselControl} onClick={() => selectSlide(current - 1)} aria-label="이전 사진">←</button>
