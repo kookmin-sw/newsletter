@@ -5,6 +5,7 @@ excerpt: "AI 역량평가, 동문 패널톡, 2026 CAREER WEEK, 알고리즘 대�
 publishedAt: "2026-10-10"
 author: "SW중심대학 기자단 '새움'"
 coverImage: "/images/news/newsletter-003-cover.svg"
+ogImage: "/images/news/newsletter-003-og.jpg"
 tags: ["뉴스레터", "Vol.003"]
 format: "html"
 articleIds:
@@ -45,7 +46,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-ai-competency-interview" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-ai-competency-interview.png" alt="‘AI 잘 쓰는 것’도 졸업 역량일까? 교수진에게 물었다" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-ai-competency-interview" style="display: block; text-decoration: none; color: inherit;"><img loading="eager" decoding="async" src="/images/articles/optimized/2026-ai-competency-interview.webp" alt="‘AI 잘 쓰는 것’도 졸업 역량일까? 교수진에게 물었다" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -65,7 +66,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-alumni-panel-talk" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-alumni-panel-main.jpg" alt="“스펙 쌓기 전에 이유부터 만드세요”… 동문 선배들이 털어놓은 취업 현실" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-alumni-panel-talk" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/2026-alumni-panel-main.webp" alt="“스펙 쌓기 전에 이유부터 만드세요”… 동문 선배들이 털어놓은 취업 현실" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -85,7 +86,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-career-week" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-career-week.png" alt="국민대 소프트웨어융합대학, 11월 10일 ‘2026 CAREER WEEK’ 개막" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-career-week" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/2026-career-week.webp" alt="국민대 소프트웨어융합대학, 11월 10일 ‘2026 CAREER WEEK’ 개막" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -105,7 +106,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-algorithm-contest" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-algorithm-contest-awards.webp" alt="고등학생 70명, 2시간의 승부 · 제11회 국민대학교 알고리즘 대회" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-algorithm-contest" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/2026-algorithm-contest-awards.webp" alt="고등학생 70명, 2시간의 승부 · 제11회 국민대학교 알고리즘 대회" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -125,7 +126,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-autonomous-driving-contest" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-autonomous-driving-contest.png" alt="114팀 중 단 22팀, 5대 1의 관문을 뚫고 빛난 국민대 · 제9회 자율주행 경진대회" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-autonomous-driving-contest" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/2026-autonomous-driving-contest.webp" alt="114팀 중 단 22팀, 5대 1의 관문을 뚫고 빛난 국민대 · 제9회 자율주행 경진대회" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -145,7 +146,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-summer-internship" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-summer-internship-main.webp" alt="“방학 동안 진짜 회사에서 일해봤습니다” · 2026 하계 현장실습" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-summer-internship" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/2026-summer-internship-main.webp" alt="“방학 동안 진짜 회사에서 일해봤습니다” · 2026 하계 현장실습" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -165,7 +166,7 @@ articleIds:
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-icar-interview" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-icar-race.webp" alt="“학교의 지원이 있었기에” · iCar 팀 인터뷰" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-icar-interview" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/2026-icar-race.webp" alt="“학교의 지원이 있었기에” · iCar 팀 인터뷰" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>

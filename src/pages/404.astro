@@ -1,35 +1,41 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { Heading } from '@/components/atoms/Heading';
-import { Text } from '@/components/atoms/Text';
 import { Button } from '@/components/atoms/Button';
 import { url } from '@/lib/path';
 ---
 
 <BaseLayout title="페이지를 찾을 수 없습니다">
-  <section class="page-section">
-    <div class="page-container notfound-content">
-      <Heading client:load level={1} align="center">
-        404
-      </Heading>
-      <Text client:load size="xl" color="secondary" align="center">
-        요청하신 페이지를 찾을 수 없습니다.
-      </Text>
+  <section class="notfound page-container" aria-labelledby="notfound-title">
+    <div class="notfound-content">
+      <span class="notfound-label">KMU-CS ALUMNI</span>
+      <div class="notfound-code" aria-hidden="true">404<span>.</span></div>
+      <h1 id="notfound-title">페이지를 찾을 수 없습니다</h1>
+      <p>주소가 바뀌었거나 페이지가 삭제되었을 수 있습니다.<br />주소를 다시 확인하거나 아래 메뉴를 이용해 주세요.</p>
       <div class="notfound-actions">
-        <Button client:load as="a" href={url('/')} variant="primary" size="lg">
-          홈으로 돌아가기
-        </Button>
+        <Button client:load as="a" href={url('/')} variant="primary" size="md">홈으로 돌아가기</Button>
+        <Button client:load as="a" href={url('/articles')} variant="secondary" size="md">소식 둘러보기</Button>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .notfound-content {
-    text-align: center;
-    padding-block: 6rem;
+  .notfound {
+    min-height: min(660px, 70vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 5rem;
   }
-  .notfound-actions {
-    margin-top: 2rem;
+  .notfound-content { max-width: 600px; text-align: center; }
+  .notfound-label { color: #1a5bc4; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.13em; }
+  .notfound-code { margin-top: 1rem; color: #e8eef8; font-size: clamp(7rem, 19vw, 11rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.08em; }
+  .notfound-code span { color: #1a5bc4; }
+  h1 { margin: 1.75rem 0 0; color: #212529; font-size: clamp(1.5rem, 3.5vw, 2rem); letter-spacing: -0.035em; word-break: keep-all; }
+  p { margin: 1rem 0 0; color: #495057; font-size: 1rem; line-height: 1.8; word-break: keep-all; }
+  .notfound-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 2rem; }
+  @media (max-width: 480px) {
+    .notfound { min-height: 60vh; padding-block: 4rem; }
+    .notfound-actions > :global(a) { flex: 1 1 auto; }
   }
 </style>

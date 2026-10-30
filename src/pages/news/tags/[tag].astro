@@ -28,6 +28,7 @@ const { tag, news } = Astro.props;
   <section class="page-section">
     <div class="page-container">
       <SectionHeader
+        level={1}
         client:load
         label={`#${tag}`}
         title={`"${tag}" 관련 뉴스`}

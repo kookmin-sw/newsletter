@@ -23,6 +23,7 @@ export const card = style({
 
 export const cardImage = style({
   width: '100%',
+  height: 'auto',
   aspectRatio: '16 / 10',
   objectFit: 'cover',
   backgroundColor: vars.color.surface,

@@ -35,6 +35,17 @@ async function check(directory, parts = []) {
         assert.equal(canonical.length, 1, `Canonical count: ${path}`);
         assert.equal(attr(canonical[0], 'href'), new URL(path, site).href, `Canonical mismatch: ${path}`);
       }
+      if (/^\/(?:articles|news)\/(?:tags\/.*)?$/.test(path)) {
+        assert.equal(elements(document, 'h1').length, 1, `Missing page heading: ${path}`);
+      }
+      if (/^\/news\/newsletter-[a-z0-9-]+\/$/.test(path)) {
+        const slug = path.split('/').filter(Boolean).at(-1);
+        const source = await readFile(new URL(`../src/content/news/${slug}.md`, import.meta.url), 'utf8');
+        const field = name => JSON.parse(source.match(new RegExp(`^${name}: (.*)$`, 'm'))[1]);
+        const meta = name => elements(document, 'meta').find(node => attr(node, 'property') === name || attr(node, 'name') === name);
+        assert.equal(attr(meta('description'), 'content'), field('excerpt'), `Edition description: ${path}`);
+        assert.equal(attr(meta('og:image'), 'content'), new URL(field('ogImage'), site).href, `Edition image: ${path}`);
+      }
       if (/^\/(?:articles|news)\/$/.test(path)) {
         const articleLinks = elements(document, 'a').map(node => attr(node, 'href')).filter(href => href?.startsWith(path) && !href.includes('/tags/'));
         assert(articleLinks.length > 0, `No crawlable article links: ${path}`);

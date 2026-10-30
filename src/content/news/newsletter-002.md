@@ -5,6 +5,7 @@ excerpt: "AWS AI 플랫폼 부트캠프, 2026 KMUCS EXPO, KMU-UCI Summer GREAT P
 publishedAt: "2026-06-01"
 author: "SW중심대학 기자단 '새움'"
 coverImage: "/images/news/newsletter-002-cover.svg"
+ogImage: "/images/news/newsletter-002-og.jpg"
 tags: ["뉴스레터", "Vol.002"]
 format: "html"
 ---
@@ -37,7 +38,7 @@ format: "html"
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-aws-summer-bootcamp" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/aws-bootcamp-main.png" alt="국민대학교 소프트웨어융합대학, AWS 기반 AI 플랫폼 부트캠프 운영" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-aws-summer-bootcamp" style="display: block; text-decoration: none; color: inherit;"><img loading="eager" decoding="async" src="/images/articles/optimized/aws-bootcamp-main.webp" alt="국민대학교 소프트웨어융합대학, AWS 기반 AI 플랫폼 부트캠프 운영" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -57,7 +58,7 @@ format: "html"
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-kmucs-expo" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/2026-capstone.png" alt="2026 KMUCS EXPO, 전공 경험을 진로와 실무로 잇다" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-kmucs-expo" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/2026-capstone.webp" alt="2026 KMUCS EXPO, 전공 경험을 진로와 실무로 잇다" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -77,7 +78,7 @@ format: "html"
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-kmu-uci-great-program" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/great-program-main.png" alt="해외에서 배우는 연구의 시간, KMU-UCI Summer GREAT Program" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-kmu-uci-great-program" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/great-program-main.webp" alt="해외에서 배우는 연구의 시간, KMU-UCI Summer GREAT Program" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -97,7 +98,7 @@ format: "html"
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-mentoring-system" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/mentoring-main.jpg" alt="현업 멘토와 학부생을 이어주는 국민대 소프트웨어융합대학의 '멘토링 시스템'" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-mentoring-system" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/mentoring-main.jpg" alt="현업 멘토와 학부생을 이어주는 국민대 소프트웨어융합대학의 '멘토링 시스템'" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -117,7 +118,7 @@ format: "html"
         <tr><td height="25"></td></tr>
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
-            <a href="/articles/2026-scholarship-cohort-helper" style="display: block; text-decoration: none; color: inherit;"><img src="/images/articles/scholarship-helper-main.png" alt="국민대 장학제도와 코호트 헬퍼 운영 확대: “단순 지원 넘어 함께 성장하는 학습 환경 만든다”" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <a href="/articles/2026-scholarship-cohort-helper" style="display: block; text-decoration: none; color: inherit;"><img loading="lazy" decoding="async" src="/images/articles/optimized/scholarship-helper-main.webp" alt="국민대 장학제도와 코호트 헬퍼 운영 확대: “단순 지원 넘어 함께 성장하는 학습 환경 만든다”" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>

@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import { rehypeImages } from './src/lib/rehype-images.mjs';
 import { isIndexablePath } from './src/lib/seo.mjs';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 
@@ -12,7 +13,6 @@ export default defineConfig({
   site: 'https://alumni.cs.kookmin.ac.kr',
   base: '/',
   output: 'static',
-  trailingSlash: 'always',
   integrations: [
     react(),
     mdx(),
@@ -24,6 +24,7 @@ export default defineConfig({
     ],
   },
   markdown: {
+    rehypePlugins: [rehypeImages],
     shikiConfig: {
       theme: 'github-light',
     },

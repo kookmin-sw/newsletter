@@ -1,0 +1,22 @@
+---
+import site from '@/content/config/site.json';
+const measurementId = site.gaMeasurementId?.trim() ?? '';
+if (measurementId && !/^G-[A-Z0-9]+$/.test(measurementId)) {
+  throw new Error('gaMeasurementId must be a GA4 measurement ID (G-...).');
+}
+const productionHost = new URL(site.siteUrl).hostname;
+---
+
+{measurementId && <script is:inline define:vars={{ measurementId, productionHost }}>
+  if (location.hostname === productionHost && !window.__kmuAnalytics) {
+    window.__kmuAnalytics = measurementId;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', measurementId);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+  }
+</script>}

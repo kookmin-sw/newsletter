@@ -19,7 +19,7 @@ const isHtmlNewsletter = item.data.format === 'html';
 ---
 
 {isHtmlNewsletter ? (
-  <BaseLayout title={item.data.title} currentPath="/news">
+  <BaseLayout title={item.data.title} description={item.data.excerpt} ogImage={item.data.ogImage ?? item.data.coverImage} currentPath="/news">
     <div class="html-newsletter">
       <Content />
     </div>
@@ -79,7 +79,7 @@ const isHtmlNewsletter = item.data.format === 'html';
       margin: 0;
       border-radius: 0;
     }
-    .html-newsletter img[height="380"] {
+    .html-newsletter img:not([height="30"]) {
       height: auto !important;
     }
     .html-newsletter img[height="30"] {

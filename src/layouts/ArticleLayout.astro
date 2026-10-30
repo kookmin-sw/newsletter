@@ -4,6 +4,7 @@ import { TagList } from '@/components/atoms/Tag';
 import { Badge } from '@/components/atoms/Badge';
 import { asset } from '@/lib/path';
 import siteConfig from '@/content/config/site.json';
+import imageMetadata from '@/content/config/image-meta.json';
 
 interface Props {
   title: string;
@@ -30,6 +31,8 @@ const {
   category,
   tagBasePath,
 } = Astro.props;
+
+const coverSize = coverImage ? imageMetadata[coverImage as keyof typeof imageMetadata] : undefined;
 
 const categoryLabels: Record<string, string> = {
   notice: '공지',
@@ -92,7 +95,7 @@ function formatDate(d: Date): string {
       </header>
 
       {coverImage && (
-        <img src={asset(coverImage)} alt={title} class="article-cover" />
+        <img src={asset(coverImage)} alt={title} class="article-cover" width={coverSize?.width} height={coverSize?.height} decoding="async" fetchpriority="high" />
       )}
 
       <div class="article-content">
@@ -140,6 +143,7 @@ function formatDate(d: Date): string {
   }
   .article-cover {
     width: 100%;
+    height: auto;
     max-width: 850px;
     margin-inline: auto;
     border-radius: 1rem;

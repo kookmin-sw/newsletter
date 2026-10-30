@@ -5,6 +5,7 @@ excerpt: "국민대학교 소프트웨어융합대학의 첫 번째 뉴스레터
 publishedAt: "2026-04-02"
 author: "SW중심대학 기자단 '새움'"
 coverImage: "/images/news/newsletter-001-cover.svg"
+ogImage: "/images/news/newsletter-001-og.jpg"
 tags: ["뉴스레터", "Vol.001"]
 format: "html"
 ---
@@ -38,7 +39,7 @@ format: "html"
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
             <a href="/articles/2025-kmu-cs-expo" style="display: block; text-decoration: none; color: inherit;">
-            <img src="/images/articles/expo-main.png" alt="국민대학교, 'KMU-CS EXPO'로 확장된 캡스톤디자인 전시 프로젝트·기업·진로를 잇는 소프트웨어 교류의 장" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <img loading="eager" decoding="async" src="/images/articles/optimized/expo-main.webp" alt="국민대학교, 'KMU-CS EXPO'로 확장된 캡스톤디자인 전시 프로젝트·기업·진로를 잇는 소프트웨어 교류의 장" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -60,7 +61,7 @@ format: "html"
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
             <a href="/articles/2025-algorithm-contest" style="display: block; text-decoration: none; color: inherit;">
-            <img src="/images/articles/algorithm-contest-.jpg" alt="국민대학교, 고등학생 대상 알고리즘 대회로 미래 소프트웨어 인재 발굴 이어와" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <img loading="lazy" decoding="async" src="/images/articles/optimized/algorithm-contest-.webp" alt="국민대학교, 고등학생 대상 알고리즘 대회로 미래 소프트웨어 인재 발굴 이어와" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -82,7 +83,7 @@ format: "html"
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
             <a href="/articles/2025-autonomous-driving-contest" style="display: block; text-decoration: none; color: inherit;">
-            <img src="/images/articles/KakaoTalk_20250828_154928457_03.jpg" alt="국민대 소프트웨어융합대학, 자율주행 SW 인재 양성의 메카로 우뚝" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <img loading="lazy" decoding="async" src="/images/articles/optimized/KakaoTalk_20250828_154928457_03.webp" alt="국민대 소프트웨어융합대학, 자율주행 SW 인재 양성의 메카로 우뚝" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -104,7 +105,7 @@ format: "html"
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
             <a href="/articles/2025-career-week" style="display: block; text-decoration: none; color: inherit;">
-            <img src="/images/articles/career-week-main.jpg" alt="2025 KMUCS 커리어위크 성료" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <img loading="lazy" decoding="async" src="/images/articles/career-week-main.jpg" alt="2025 KMUCS 커리어위크 성료" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">보도자료</span>
@@ -126,7 +127,7 @@ format: "html"
         <tr>
           <td style="background-color: #1a1a1a; border-radius: 12px; overflow: hidden; padding-bottom: 25px;">
             <a href="/articles/2026-mogakgong-expo" style="display: block; text-decoration: none; color: inherit;">
-            <img src="/images/articles/mogakgong-main.png" alt="국민대 소프트웨어융합대학, 2026 KMUCS EXPO 및 모각공 개최" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
+            <img loading="lazy" decoding="async" src="/images/articles/mogakgong-main.png" alt="국민대 소프트웨어융합대학, 2026 KMUCS EXPO 및 모각공 개최" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />
             <div style="padding: 25px;">
               <div style="margin-bottom: 12px;">
                 <span style="background-color: #0056b3; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-right: 6px;">홍보자료</span>

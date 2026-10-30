@@ -60,10 +60,10 @@ function buildEmailHtml(meta: Meta, sections: Section[]): string {
   const base = (meta.baseUrl || '').replace(/\/$/, '');
   const abs = (u: string) => (!u ? '' : /^https?:/.test(u) ? u : base + (u.startsWith('/') ? u : '/' + u));
 
-  const sectionBlocks = sections.map((s) => {
+  const sectionBlocks = sections.map((s, index) => {
     const img = abs(s.image);
     const imgHtml = img
-      ? `<img src="${esc(img)}" alt="${esc(s.title)}" width="100%" height="380" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />`
+      ? `<img loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" src="${esc(img)}" alt="${esc(s.title)}" width="800" height="450" style="display: block; width: 100%; height: 380px; background-color: #333; object-fit: cover;" />`
       : '';
     const author = s.author
       ? `<span style="background-color: #333; color: #fff; font-size: 14px; padding: 4px 10px; border-radius: 4px; display: inline-block;">${esc(s.author)}</span>`

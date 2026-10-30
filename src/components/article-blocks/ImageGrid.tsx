@@ -1,3 +1,4 @@
+import imageMetadata from '@/content/config/image-meta.json';
 import { imageGrid, imageGridItem, imageGridImg, imageCaption } from './ImageGrid.css';
 
 interface ImageItem {
@@ -14,12 +15,15 @@ interface ImageGridProps {
 export function ImageGrid({ images, columns = 2 }: ImageGridProps) {
   return (
     <div className={imageGrid({ columns })}>
-      {images.map((img, i) => (
+      {images.map((img, i) => {
+        const size = imageMetadata[img.src as keyof typeof imageMetadata];
+        return (
         <figure key={i} className={imageGridItem}>
-          <img src={img.src} alt={img.alt} className={imageGridImg} loading="lazy" />
+          <img src={img.src} alt={img.alt} className={imageGridImg} width={size?.width} height={size?.height} loading="lazy" decoding="async" />
           {img.caption && <figcaption className={imageCaption}>{img.caption}</figcaption>}
         </figure>
-      ))}
+        );
+      })}
     </div>
   );
 }

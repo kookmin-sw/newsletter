@@ -39,6 +39,7 @@ const news = defineCollection({
     author: z.string(),
     authorRole: z.string().optional(),
     coverImage: z.string().optional(),
+    ogImage: z.string().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     source: z.string().optional(),
