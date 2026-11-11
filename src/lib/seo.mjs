@@ -1,5 +1,5 @@
 export function isIndexablePath(pathname) {
-  return !/^\/(?:tools|signage)(?:\/|$)/.test(pathname)
+  return !/^\/(?:tools|signage|2026_Alumni_event)(?:\/|$)/.test(pathname)
     && !/^\/(?:articles|news)\/tags(?:\/|$)/.test(pathname)
     && !/^\/404(?:\.html|\/)?$/.test(pathname);
 }
