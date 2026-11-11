@@ -16,7 +16,11 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap({ filter: (page) => isIndexablePath(new URL(page).pathname) }),
+    sitemap({
+      filter: (page) => isIndexablePath(new URL(page).pathname),
+      // public/ 정적 페이지는 Astro가 모르므로 직접 등록
+      customPages: ['https://alumni.cs.kookmin.ac.kr/2026_Alumni_event/'],
+    }),
   ],
   vite: {
     plugins: [
