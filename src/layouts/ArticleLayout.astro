@@ -280,6 +280,39 @@ function formatDate(d: Date): string {
     padding: 0.5rem 0.75rem;
     border-bottom: 1px solid #E9ECEF;
   }
+  .article-content .great-week {
+    margin-block: 1.5rem;
+    overflow: hidden;
+    border: 1px solid #D8E3F5;
+    border-radius: 0.875rem;
+  }
+  .article-content .great-week table {
+    margin: 0;
+    table-layout: fixed;
+    font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+    line-height: 1.5;
+    text-align: center;
+  }
+  .article-content .great-week th {
+    padding: 0.75rem 0.25rem;
+    border-bottom: 1px solid #D8E3F5;
+    background: #F2F6FD;
+    color: #1A5BC4;
+    text-align: center;
+  }
+  .article-content .great-week td {
+    padding: 1rem 0.25rem;
+    border: 0;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+  .article-content .great-week th:not(:last-child),
+  .article-content .great-week td:not(:last-child) {
+    border-right: 1px solid #E9EEF5;
+  }
+  .article-content .great-week td:nth-last-child(-n + 2) {
+    background: #F8FAFD;
+  }
   .article-content strong {
     font-weight: 600;
   }
